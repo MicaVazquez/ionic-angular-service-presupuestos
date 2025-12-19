@@ -1,14 +1,27 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  // {
+  //   path: 'home',
+  //   redirectTo: 'folder/inbox',
+  //   pathMatch: 'full',
+  // },
   {
-    path: '',
-    redirectTo: 'folder/inbox',
-    pathMatch: 'full',
+    path: 'nuevo-presupuesto',
+    loadComponent: () =>
+      import('./nuevo-presupuesto/nuevo-presupuesto.page').then(
+        (m) => m.NuevoPresupuestoPage
+      ),
   },
   {
-    path: 'folder/:id',
+    path: 'home',
     loadComponent: () =>
-      import('./folder/folder.page').then((m) => m.FolderPage),
+      import('./inicio/inicio.component').then((m) => m.InicioComponent),
+  },
+
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./splash/splash.component').then((m) => m.SplashComponent),
   },
 ];

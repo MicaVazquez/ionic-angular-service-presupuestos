@@ -1,0 +1,139 @@
+.background {
+  background: #f4f5f8 !important;
+}
+
+ion-content {
+  --background: #f4f5f8 !important;
+}
+ion-item {
+  --background: #f4f5f8 !important;
+  color: #4b5563;
+}
+ion-datetime {
+  --background: #f4f5f8;
+
+  border-radius: 16px;
+  box-shadow: rgba(var(--ion-color-light-rgb), 0.3) 0px 10px 15px -3px;
+}
+/* Contenedor que centra y separa el formulario de los bordes del viewport */
+.page-container {
+  padding: 20px; /* separación desde los bordes */
+  max-width: 980px; /* ancho máximo para pantallas grandes */
+  margin: 0 auto; /* centrar horizontalmente */
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.input-box {
+  background: #f4f5f8;
+  border-radius: 12px;
+  margin-bottom: 14px;
+
+  /* Hacemos que el input se vea como un campo blanco dentro del contenedor */
+  padding: 8px;
+  ion-input {
+    --padding-start: 12px;
+  }
+}
+
+.items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-card {
+  background: #f9fafc;
+  border-radius: 14px;
+  padding: 15px;
+  margin-top: 15px;
+  border: 1px solid #e8e8e8;
+}
+
+/* Asegurar que el label se vea con tamaño cómodo */
+.input-box ion-label {
+  font-size: 1.5 em;
+  color: #4b5563;
+}
+
+.item-title {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.half {
+  flex: 1;
+}
+
+.subtotal {
+  text-align: right;
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.delete-row {
+  text-align: right;
+  margin-top: 5px;
+}
+
+.total-card {
+  text-align: center;
+}
+
+.total-amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* Botón Agregar estilo */
+.items-header ion-button {
+  color: #9a7a4a;
+  font-weight: 600;
+}
+
+.items-header ion-button ion-icon {
+  margin-right: 6px;
+  font-size: 18px;
+}
+
+/* Botón Quitar */
+.delete-row ion-button {
+  --padding-start: 6px;
+  --padding-end: 6px;
+  color: #ef4444;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 600px) {
+  .card {
+    padding: 16px;
+  }
+
+  .item-card {
+    padding: 12px;
+  }
+}
