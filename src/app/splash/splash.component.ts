@@ -2,13 +2,13 @@ import { Component, OnInit, inject } from '@angular/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { IonSpinner, IonIcon } from '@ionic/angular/standalone';
+import { IonSpinner } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-splash',
   templateUrl: './splash.component.html',
   styleUrls: ['./splash.component.scss'],
-  imports: [IonSpinner, IonIcon],
+  imports: [IonSpinner],
 })
 export class SplashComponent implements OnInit {
   router_service = inject(Router);

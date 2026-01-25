@@ -10,7 +10,7 @@ export const routes: Routes = [
     path: 'nuevo-presupuesto',
     loadComponent: () =>
       import('./nuevo-presupuesto/nuevo-presupuesto.page').then(
-        (m) => m.NuevoPresupuestoPage
+        (m) => m.NuevoPresupuestoPage,
       ),
   },
   {
@@ -18,7 +18,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./inicio/inicio.component').then((m) => m.InicioComponent),
   },
-
+  {
+    path: 'mis-presupuestos',
+    loadComponent: () =>
+      import('./mis-presupuestos/mis-presupuestos.page').then(
+        (m) => m.MisPresupuestosPage,
+      ),
+  },
   {
     path: '**',
     loadComponent: () =>

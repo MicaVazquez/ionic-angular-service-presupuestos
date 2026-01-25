@@ -33,12 +33,16 @@ import {
   bookmarkOutline,
   bookmarkSharp,
   addCircle,
-  homeSharp,
   addCircleOutline,
+  homeOutline,
+  homeSharp,
   addOutline,
   downloadOutline,
   close,
   checkmark,
+  add,
+  documentTextOutline,
+  documentText,
 } from 'ionicons/icons';
 
 @Component({
@@ -67,33 +71,27 @@ export class AppComponent {
     {
       title: 'Nuevo Presupuesto',
       url: '/nuevo-presupuesto',
-      icon: 'mail',
+      icon: 'add-circle',
+    },
+    {
+      title: 'Mis Presupuestos',
+      url: '/mis-presupuestos',
+      icon: 'document-text',
     },
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
   constructor() {
     addIcons({
-      mailOutline,
-      mailSharp,
-      paperPlaneOutline,
-      paperPlaneSharp,
-      heartOutline,
-      heartSharp,
-      archiveOutline,
-      archiveSharp,
-      trashOutline,
-      trashSharp,
-      warningOutline,
-      warningSharp,
-      bookmarkOutline,
-      bookmarkSharp,
-      addCircle,
+      homeOutline,
       homeSharp,
+      addCircle,
       addCircleOutline,
-      addOutline,
+      documentTextOutline,
+      documentText,
       downloadOutline,
       close,
       checkmark,
+      add,
     });
   }
 }
