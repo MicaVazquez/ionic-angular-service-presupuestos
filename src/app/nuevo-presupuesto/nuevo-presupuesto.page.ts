@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { DatabaseService } from '../services/database-service';
 @Component({
   selector: 'app-nuevo-presupuesto',
   templateUrl: './nuevo-presupuesto.page.html',
@@ -50,6 +51,7 @@ export class NuevoPresupuestoPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private databaseService: DatabaseService,
   ) {}
 
   ngOnInit() {
@@ -58,7 +60,7 @@ export class NuevoPresupuestoPage implements OnInit {
       fecha: [new Date().toISOString().slice(0, 10), Validators.required],
       anticipo: [0, [Validators.required, Validators.min(0)]],
       items: this.fb.array([]),
-      observaciones: ['', Validators.required],
+      observaciones: [''],
     });
 
     // Arrancamos con un item
@@ -110,8 +112,9 @@ export class NuevoPresupuestoPage implements OnInit {
 
   // Guardar presupuesto
   guardar() {
-    this.presupuestoForm.markAllAsTouched();
-    this.presupuestoForm.updateValueAndValidity();
+    console.log(this.presupuestoForm.value);
+    // this.presupuestoForm.markAllAsTouched();
+    // this.presupuestoForm.updateValueAndValidity();
     if (!this.presupuestoForm.valid) {
       Swal.fire({
         icon: 'error',
@@ -130,17 +133,25 @@ export class NuevoPresupuestoPage implements OnInit {
       anticipoMonto: this.anticipoAmount,
       items: this.items.value,
       total: this.total,
-      observaciones: this.presupuestoForm.get('observaciones')?.value,
+      observaciones: this.presupuestoForm.get('observaciones')?.value, //consultar lo de observaciones
     };
 
-    // presupuesto.guardadoEn = new Date().toISOString();
+    // Guardar
 
-    // Guardar en localStorage
-    // const presupuestos = JSON.parse(
-    //   localStorage.getItem('presupuestos') || '[]',
-    // );
-    // presupuestos.push(presupuesto);
-    // localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
+    this.databaseService
+      .guardar(presupuesto)
+      .then(() => {
+        this.mostrarExito();
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al guardar el presupuesto',
+          heightAuto: false,
+          backdrop: true,
+        });
+      });
 
     // Aquí puedes redirigir a otra página si lo deseas
     this.router.navigate(['/home']);
@@ -168,5 +179,17 @@ export class NuevoPresupuestoPage implements OnInit {
     this.presupuestoForm.reset();
     // Aquí puedes redirigir a otra página si lo deseas
     this.router.navigate(['/home']);
+  }
+
+  mostrarExito() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Éxito',
+      text: 'Presupuesto guardado correctamente',
+      heightAuto: false,
+      backdrop: true,
+    }).then(() => {
+      this.router.navigate(['/home']);
+    });
   }
 }
