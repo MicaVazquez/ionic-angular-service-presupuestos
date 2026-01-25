@@ -8,14 +8,40 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Inicio</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="page-container">
+    <!-- Botón Nuevo Presupuesto -->
+    <ion-button
+      expand="block"
+      class="btn-nuevo-presupuesto"
+      routerLink="/nuevo-presupuesto"
+    >
+      <ion-icon name="add" slot="start"></ion-icon>
+      Nuevo Presupuesto
+    </ion-button>
 
-  <div id="container">
-    <strong class="capitalize">Inicio</strong>
-    <p>Bienvenido. Usa el menú lateral para navegar.</p>
+    <!-- Últimos Presupuestos -->
+    <h2 class="section-title">Últimos Presupuestos</h2>
+
+    <!-- Estado vacío -->
+    <div class="empty-state">
+      <div class="icon-container">
+        <ion-icon name="document-text-outline" class="empty-icon"></ion-icon>
+      </div>
+
+      <h3 class="empty-title">¡Bienvenido a CPV!</h3>
+      <p class="empty-text">
+        Aún no has creado ningún presupuesto. Comienza creando tu primer
+        presupuesto para tus clientes.
+      </p>
+
+      <ion-button
+        expand="block"
+        class="btn-crear-primero"
+        (click)="crearPrimerPresupuesto()"
+      >
+        <ion-icon name="add" slot="start"></ion-icon>
+        Crear mi primer presupuesto
+      </ion-button>
+    </div>
   </div>
 </ion-content>

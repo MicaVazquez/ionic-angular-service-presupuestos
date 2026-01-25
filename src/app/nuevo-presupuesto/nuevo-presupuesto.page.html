@@ -8,11 +8,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">nuevoPresupuesto</ion-title>
-    </ion-toolbar>
-  </ion-header>
   <div class="page-container">
     <form [formGroup]="presupuestoForm">
       <!-- CLIENTE -->
@@ -21,12 +16,24 @@
 
         <ion-item lines="none" class="input-box">
           <ion-label position="stacked">Cliente</ion-label>
-          <ion-input formControlName="cliente"></ion-input>
+          <ion-input
+            formControlName="cliente"
+            placeholder="Nombre del cliente"
+          ></ion-input>
         </ion-item>
 
         <ion-item lines="none" class="input-box">
           <ion-label position="stacked">Fecha</ion-label>
           <ion-input type="date" formControlName="fecha"></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="input-box">
+          <ion-label position="stacked">Anticipo (%)</ion-label>
+          <ion-input
+            type="number"
+            formControlName="anticipo"
+            placeholder="Porcentaje del anticipo"
+          ></ion-input>
         </ion-item>
       </div>
 
@@ -49,24 +56,22 @@
 
             <ion-item lines="none" class="input-box">
               <ion-label position="stacked">Descripción</ion-label>
-              <ion-input formControlName="descripcion"></ion-input>
+              <ion-input
+                formControlName="descripcion"
+                placeholder="Descripción"
+              ></ion-input>
             </ion-item>
 
-            <div class="row">
-              <ion-item lines="none" class="input-box half">
-                <ion-label position="stacked">Cantidad</ion-label>
-                <ion-input type="number" formControlName="cantidad"></ion-input>
-              </ion-item>
+            <ion-item lines="none" class="input-box">
+              <ion-label position="stacked">Precio Unitario</ion-label>
+              <ion-input
+                type="number"
+                formControlName="precio"
+                placeholder="0.00"
+              ></ion-input>
+            </ion-item>
 
-              <ion-item lines="none" class="input-box half">
-                <ion-label position="stacked">Precio Unit.</ion-label>
-                <ion-input type="number" formControlName="precio"></ion-input>
-              </ion-item>
-            </div>
-
-            <div class="subtotal">
-              Subtotal: ${{ (item.value.cantidad * item.value.precio) || 0 }}
-            </div>
+            <div class="subtotal">Precio: ${{ (item.value.precio) || 0 }}</div>
 
             <div class="delete-row">
               <ion-button
@@ -83,10 +88,36 @@
         </div>
       </div>
 
-      <!-- TOTAL -->
-      <div class="card total-card">
-        <h2 class="section-title">Total</h2>
-        <p class="total-amount">${{ total }}</p>
+      <!-- RESUMEN -->
+      <div class="card resumen-card">
+        <h2 class="section-title black">Resumen</h2>
+        <div class="resumen-item gray">
+          <span class="label">Subtotal:</span>
+          <span class="value">${{ subtotal | number:'1.0-0' }}</span>
+        </div>
+        <div class="resumen-item gray">
+          <span class="label"
+            >Anticipo ({{ presupuestoForm.get('anticipo')?.value || 0
+            }}%):</span
+          >
+          <span class="value">${{ anticipoAmount | number:'1.0-0' }}</span>
+        </div>
+        <div class="resumen-item black total-amount">
+          <span class="label">TOTAL:</span>
+          <span class="value">${{ total | number:'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="actions-container">
+        <ion-button expand="block" fill="outline" (click)="cancelar()">
+          <ion-icon name="close" slot="start"></ion-icon>
+          Cancelar
+        </ion-button>
+        <ion-button expand="block" class="btn-send" (click)="guardar()">
+          <ion-icon name="checkmark" slot="start"></ion-icon>
+          Guardar
+        </ion-button>
       </div>
     </form>
   </div>

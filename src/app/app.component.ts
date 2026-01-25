@@ -36,6 +36,9 @@ import {
   homeSharp,
   addCircleOutline,
   addOutline,
+  downloadOutline,
+  close,
+  checkmark,
 } from 'ionicons/icons';
 
 @Component({
@@ -50,8 +53,6 @@ import {
     IonMenu,
     IonContent,
     IonList,
-    IonListHeader,
-    IonNote,
     IonMenuToggle,
     IonItem,
     IonIcon,
@@ -90,6 +91,9 @@ export class AppComponent {
       homeSharp,
       addCircleOutline,
       addOutline,
+      downloadOutline,
+      close,
+      checkmark,
     });
   }
 }

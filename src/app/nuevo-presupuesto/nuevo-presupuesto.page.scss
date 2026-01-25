@@ -9,12 +9,7 @@ ion-item {
   --background: #f4f5f8 !important;
   color: #4b5563;
 }
-ion-datetime {
-  --background: #f4f5f8;
 
-  border-radius: 16px;
-  box-shadow: rgba(var(--ion-color-light-rgb), 0.3) 0px 10px 15px -3px;
-}
 /* Contenedor que centra y separa el formulario de los bordes del viewport */
 .page-container {
   padding: 20px; /* separación desde los bordes */
@@ -102,11 +97,44 @@ ion-datetime {
   text-align: center;
 }
 
-.total-amount {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-top: 10px;
+.resumen-card {
+  /* Sin text-align center para permitir flex */
+  padding: 24px !important;
+  background: #ffffff !important;
+  border-radius: 12px;
+}
+
+.resumen-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.resumen-item.gray {
+  color: #6b7280;
+}
+
+.resumen-item.black {
   color: #333;
+}
+
+.resumen-item.total-amount {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.label {
+  font-weight: 500;
+}
+
+.value {
+  font-weight: 600;
+  text-align: right;
 }
 
 /* Botón Agregar estilo */
@@ -125,6 +153,47 @@ ion-datetime {
   --padding-start: 6px;
   --padding-end: 6px;
   color: #ef4444;
+}
+
+/* Contenedor de acciones (Guardar PDF y Enviar) */
+.actions-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.actions-container ion-button {
+  flex: 1;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  --border-radius: 10px;
+}
+
+/* Botón Guardar PDF (outline) */
+.actions-container ion-button[fill="outline"] {
+  --border-color: #d1d5db;
+  --border-width: 2px;
+  color: #374151;
+}
+
+.actions-container ion-button[fill="outline"] ion-icon {
+  margin-right: 8px;
+}
+
+/* Botón Enviar (marrón) */
+.btn-send {
+  --background: #b58b5a !important;
+  color: #ffffff !important;
+}
+
+.btn-send ion-icon {
+  margin-right: 8px;
 }
 
 /* Ajustes responsivos */
