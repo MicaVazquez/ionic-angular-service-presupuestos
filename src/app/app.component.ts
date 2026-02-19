@@ -34,6 +34,7 @@ import {
   bookmarkSharp,
   addCircle,
   addCircleOutline,
+  addCircleSharp,
   homeOutline,
   homeSharp,
   addOutline,
@@ -43,6 +44,7 @@ import {
   add,
   documentTextOutline,
   documentText,
+  documentTextSharp,
 } from 'ionicons/icons';
 
 @Component({
@@ -86,8 +88,10 @@ export class AppComponent {
       homeSharp,
       addCircle,
       addCircleOutline,
+      addCircleSharp,
       documentTextOutline,
       documentText,
+      documentTextSharp,
       downloadOutline,
       close,
       checkmark,

@@ -8,9 +8,97 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">misPresupuestos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Buscador -->
+  <div class="buscador-wrapper">
+    <div class="buscador">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        [(ngModel)]="busqueda"
+        (ngModelChange)="filtrarPresupuestos()"
+        placeholder="Buscar por cliente..."
+        class="input-busqueda"
+      />
+    </div>
+  </div>
+
+  <!-- Badge Total Borradores -->
+  <div class="borradores-badge">
+    <span class="borradores-icono">📋</span>
+    <span class="borradores-texto">Total de Borradores</span>
+    <span class="borradores-count">{{ totalBorradores }}</span>
+  </div>
+
+  <!-- Lista de Presupuestos -->
+  <div class="lista-presupuestos">
+    <div
+      class="card-presupuesto"
+      *ngFor="let presupuesto of presupuestosFiltrados"
+    >
+      <!-- Cabecera de la Card -->
+      <div class="card-header">
+        <div class="card-info">
+          <div class="cliente-row">
+            <span class="doc-icono">📄</span>
+            <span class="cliente-nombre">{{ presupuesto.cliente }}</span>
+          </div>
+          <span class="fecha-creacion"
+            >{{ formatearFecha(presupuesto.fecha) }}</span
+          >
+        </div>
+        <div class="card-total">
+          <span class="total-monto"
+            >${{ getTotalPresupuesto(presupuesto).toFixed(2) }}</span
+          >
+          <span class="total-items"
+            >{{ getTotalItems(presupuesto) }} items</span
+          >
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div class="card-items">
+        <p class="items-titulo">Items:</p>
+        <ul class="items-lista">
+          <li *ngFor="let item of presupuesto.items" class="item-linea">
+            • {{ item.descripcion }} — ${{ item.precio | number:'1.2-2' }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Acciones -->
+      <div class="card-acciones">
+        <div class="acciones-fila-1">
+          <button
+            class="btn btn-editar"
+            (click)="editarPresupuesto(presupuesto)"
+          >
+            <span class="btn-icono">✏️</span> Editar
+          </button>
+          <button class="btn btn-pdf" (click)="descargarPDF(presupuesto)">
+            <span class="btn-icono">⬇️</span> PDF
+          </button>
+        </div>
+        <div class="acciones-fila-2">
+          <button
+            class="btn btn-whatsapp"
+            (click)="compartirWhatsApp(presupuesto)"
+          >
+            <span class="btn-icono">🔗</span> WhatsApp
+          </button>
+          <button
+            class="btn btn-eliminar"
+            (click)="eliminarPresupuesto(presupuesto)"
+          >
+            <span class="btn-icono">🗑️</span> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div class="empty-state" *ngIf="presupuestosFiltrados.length === 0">
+      <p>No se encontraron presupuestos.</p>
+    </div>
+  </div>
 </ion-content>

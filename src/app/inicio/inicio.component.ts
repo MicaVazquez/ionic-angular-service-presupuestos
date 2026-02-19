@@ -11,6 +11,7 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
+import { DatabaseService } from '../services/database-service';
 
 @Component({
   selector: 'app-inicio',
@@ -29,11 +30,15 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class InicioComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private databaseService: DatabaseService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.databaseService.obtenerTodos().then((presupuestos) => 
+      console.log('Presupuestos en InicioComponent:', presupuestos));
+  }
 
   crearPrimerPresupuesto() {
     this.router.navigate(['/nuevo-presupuesto']);
   }
+ 
 }

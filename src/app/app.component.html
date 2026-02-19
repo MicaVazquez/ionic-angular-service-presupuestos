@@ -15,24 +15,24 @@
 
         <ion-list class="menu-list">
           @for (p of appPages; track p; let i = $index) {
-          <ion-menu-toggle auto-hide="false">
-            <ion-item
-              class="menu-item"
-              routerDirection="root"
-              [routerLink]="[p.url]"
-              detail="false"
-              routerLinkActive="active-item"
-              lines="none"
-            >
-              <ion-icon
-                slot="start"
-                [ios]="p.icon + '-outline'"
-                [md]="p.icon + '-sharp'"
-              ></ion-icon>
+            <ion-menu-toggle auto-hide="false">
+              <ion-item
+                class="menu-item"
+                routerDirection="root"
+                [routerLink]="[p.url]"
+                detail="false"
+                routerLinkActive="active-item"
+                lines="none"
+              >
+                <ion-icon
+                  slot="start"
+                  [ios]="p.icon + '-outline'"
+                  [md]="p.icon + '-sharp'"
+                ></ion-icon>
 
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
           }
         </ion-list>
       </ion-content>
