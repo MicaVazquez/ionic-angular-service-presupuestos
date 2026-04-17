@@ -11,7 +11,7 @@ import {
 } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database-service';
 import { Presupuesto } from '../interfaces/presupuesto';
-import { cogSharp } from 'ionicons/icons';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-mis-presupuestos',
   templateUrl: './mis-presupuestos.page.html',
@@ -71,7 +71,7 @@ export class MisPresupuestosPage implements OnInit {
     return presupuesto.items.length;
   }
 
-  // Acciones (stubs — implementar según necesidad)
+ 
   editarPresupuesto(presupuesto: Presupuesto) {
     console.log('Editar', presupuesto);
   }
@@ -84,11 +84,35 @@ export class MisPresupuestosPage implements OnInit {
     console.log('Compartir WhatsApp', presupuesto);
   }
 
-  eliminarPresupuesto(presupuesto: Presupuesto) {
-    console.log('Eliminar', presupuesto);
-    // ejemplo: filtrar de la lista localmente
-    this.presupuestos = this.presupuestos.filter((p) => p !== presupuesto);
-    this.filtrarPresupuestos();
+  async eliminarPresupuesto(presupuesto: Presupuesto) {
+    if (!presupuesto.id) return;
+
+    const result = await Swal.fire({
+      title: '¿Eliminar presupuesto?',
+      text: `Se eliminará el presupuesto de ${presupuesto.cliente}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      heightAuto: false,
+      backdrop: true,
+    });
+    if (!result.isConfirmed) return;
+
+    try {
+      await this.dataSrv.eliminar(presupuesto.id);
+      this.presupuestos = this.presupuestos.filter((p) => p.id !== presupuesto.id);
+      this.filtrarPresupuestos();
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el presupuesto',
+        heightAuto: false,
+        backdrop: true,
+      });
+    }
   }
 
   get totalBorradores() {
