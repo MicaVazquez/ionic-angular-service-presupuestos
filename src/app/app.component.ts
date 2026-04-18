@@ -45,6 +45,7 @@ import {
   documentTextOutline,
   documentText,
   documentTextSharp,
+  checkmarkCircle,
 } from 'ionicons/icons';
 
 @Component({
@@ -96,6 +97,7 @@ export class AppComponent {
       close,
       checkmark,
       add,
+      checkmarkCircle,
     });
   }
 }

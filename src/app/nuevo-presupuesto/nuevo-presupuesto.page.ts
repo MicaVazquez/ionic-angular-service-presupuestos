@@ -6,7 +6,6 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonItem,
   IonLabel,
   IonInput,
   IonButton,
@@ -28,7 +27,6 @@ import { DatabaseService } from '../services/database-service';
   imports: [
     IonButtons,
     IonLabel,
-    IonItem,
     IonContent,
     IonHeader,
     IonTitle,

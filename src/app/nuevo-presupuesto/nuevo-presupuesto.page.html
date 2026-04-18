@@ -1,124 +1,158 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar class="header-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Nuevo presupuesto</ion-title>
+    <ion-title>Nuevo Presupuesto</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="page-content">
   <div class="page-container">
-    <form [formGroup]="presupuestoForm">
-      <!-- CLIENTE -->
-      <div class="card">
-        <h2 class="section-title">Información del Cliente</h2>
+    <div class="hero-section">
+      <p class="breadcrumb">Presupuestos / Nuevo</p>
+      <h1 class="page-title">Nuevo Presupuesto</h1>
+    </div>
 
-        <ion-item lines="none" class="input-box">
-          <ion-label position="stacked">Cliente</ion-label>
-          <ion-input
-            formControlName="cliente"
-            placeholder="Nombre del cliente"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item lines="none" class="input-box">
-          <ion-label position="stacked">Fecha</ion-label>
-          <ion-input type="date" formControlName="fecha"></ion-input>
-        </ion-item>
-
-        <ion-item lines="none" class="input-box">
-          <ion-label position="stacked">Anticipo (%)</ion-label>
-          <ion-input
-            type="number"
-            formControlName="anticipo"
-            placeholder="Porcentaje del anticipo"
-          ></ion-input>
-        </ion-item>
-      </div>
-
-      <!-- ITEMS -->
-      <div class="card">
-        <div class="items-header">
-          <h2 class="section-title">Ítems del Presupuesto</h2>
-          <ion-button fill="clear" size="small" (click)="agregarItem()">
-            <ion-icon name="add-circle-outline"></ion-icon> Agregar
-          </ion-button>
-        </div>
-
-        <div formArrayName="items">
-          <div
-            *ngFor="let item of items.controls; let i = index"
-            [formGroupName]="i"
-            class="item-card"
-          >
-            <h3 class="item-title">Item {{ i + 1 }}</h3>
-
-            <ion-item lines="none" class="input-box">
-              <ion-label position="stacked">Descripción</ion-label>
-              <ion-input
-                formControlName="descripcion"
-                placeholder="Descripción"
-              ></ion-input>
-            </ion-item>
-
-            <ion-item lines="none" class="input-box">
-              <ion-label position="stacked">Precio Unitario</ion-label>
-              <ion-input
-                type="number"
-                formControlName="precio"
-                placeholder="0.00"
-              ></ion-input>
-            </ion-item>
-
-            <div class="subtotal">Precio: ${{ (item.value.precio) || 0 }}</div>
-
-            <div class="delete-row">
-              <ion-button
-                fill="clear"
-                color="danger"
-                size="small"
-                (click)="eliminarItem(i)"
-              >
-                <ion-icon name="trash-outline"></ion-icon>
-                Quitar
-              </ion-button>
+    <form [formGroup]="presupuestoForm" class="form-layout">
+      <!-- Left Column: Form -->
+      <div class="form-column">
+        <!-- CLIENTE SECTION -->
+        <section class="form-section">
+          <div class="section-header">
+            <h2 class="section-title">Información del Cliente</h2>
+            <div class="divider"></div>
+          </div>
+          <div class="form-card">
+            <div class="form-grid">
+              <div class="form-field full-width">
+                <label class="field-label">Cliente</label>
+                <input
+                  class="form-input"
+                  formControlName="cliente"
+                  placeholder="Nombre completo del cliente"
+                  type="text"
+                />
+              </div>
+              <div class="form-field">
+                <label class="field-label">Fecha</label>
+                <input class="form-input" formControlName="fecha" type="date" />
+              </div>
+              <div class="form-field">
+                <label class="field-label">Anticipo %</label>
+                <input
+                  class="form-input"
+                  formControlName="anticipo"
+                  placeholder="0"
+                  type="number"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        <!-- ITEMS SECTION -->
+        <section class="form-section">
+          <div class="section-header">
+            <div class="header-content">
+              <h2 class="section-title">Ítems del Presupuesto</h2>
+              <div class="divider"></div>
+            </div>
+            <button type="button" class="btn-agregar" (click)="agregarItem()">
+              <ion-icon name="add"></ion-icon>
+              Agregar
+            </button>
+          </div>
+
+          <div formArrayName="items" class="items-list">
+            <div
+              *ngFor="let item of items.controls; let i = index"
+              [formGroupName]="i"
+              class="item-card"
+            >
+              <div class="item-accent"></div>
+              <div class="item-content">
+                <div class="item-header">
+                  <h3 class="item-title">Item {{ i + 1 }}</h3>
+                  <button
+                    type="button"
+                    class="btn-delete"
+                    (click)="eliminarItem(i)"
+                  >
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </button>
+                </div>
+
+                <div class="item-form">
+                  <div class="form-field full-width">
+                    <label class="field-label">Descripción</label>
+                    <textarea
+                      class="form-input textarea"
+                      formControlName="descripcion"
+                      placeholder="Detalles del ítem, materiales, acabados..."
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="form-field">
+                    <label class="field-label">Precio Unitario</label>
+                    <div class="price-input-wrapper">
+                      <span class="price-symbol">$</span>
+                      <input
+                        class="form-input price-input"
+                        formControlName="precio"
+                        placeholder="0.00"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
-      <!-- RESUMEN -->
-      <div class="card resumen-card">
-        <h2 class="section-title black">Resumen</h2>
-        <div class="resumen-item gray">
-          <span class="label">Subtotal:</span>
-          <span class="value">${{ subtotal | number:'1.0-0' }}</span>
-        </div>
-        <div class="resumen-item gray">
-          <span class="label"
-            >Anticipo ({{ presupuestoForm.get('anticipo')?.value || 0
-            }}%):</span
-          >
-          <span class="value">${{ anticipoAmount | number:'1.0-0' }}</span>
-        </div>
-        <div class="resumen-item black total-amount">
-          <span class="label">TOTAL:</span>
-          <span class="value">${{ total | number:'1.0-0' }}</span>
-        </div>
-      </div>
+      <!-- Right Column: Summary (Sticky) -->
+      <aside class="summary-column">
+        <div class="summary-card">
+          <h2 class="summary-title">Resumen</h2>
 
-      <!-- ACCIONES -->
-      <div class="actions-container">
-        <ion-button expand="block" fill="outline" (click)="cancelar()">
-          <ion-icon name="close" slot="start"></ion-icon>
-          Cancelar
-        </ion-button>
-        <ion-button expand="block" class="btn-send" (click)="guardar()">
-          <ion-icon name="checkmark" slot="start"></ion-icon>
-          Guardar
-        </ion-button>
-      </div>
+          <div class="summary-items">
+            <div class="summary-row">
+              <span class="summary-label">Subtotal</span>
+              <span class="summary-value"
+                >${{ subtotal | number:'1.0-2' }}</span
+              >
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">
+                Anticipo ({{ presupuestoForm.get('anticipo')?.value || 0 }}%)
+              </span>
+              <span class="summary-value"
+                >${{ anticipoAmount | number:'1.0-2' }}</span
+              >
+            </div>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span class="total-label">Total</span>
+            <span class="total-value">${{ total | number:'1.0-2' }}</span>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn-guardar" (click)="guardar()">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              Guardar
+            </button>
+            <button type="button" class="btn-cancelar" (click)="cancelar()">
+              <ion-icon name="close"></ion-icon>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </aside>
     </form>
   </div>
 </ion-content>
