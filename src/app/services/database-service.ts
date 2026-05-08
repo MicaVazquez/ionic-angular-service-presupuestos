@@ -59,14 +59,31 @@ export class DatabaseService {
     id: string,
     cambios: Partial<Presupuesto>,
   ): Promise<Presupuesto> {
+    const { id: _, ...cambiosSinId } = cambios;
+
+    console.log('=== DEBUG UPDATE ===');
+    console.log('ID:', id);
+    console.log('Cambios sin ID:', JSON.stringify(cambiosSinId, null, 2));
+
+    // Primero verificar que el registro existe
+    const { data: existe, error: errorBuscar } = await this.supabase
+      .from(this.tabla)
+      .select('id')
+      .eq('id', id)
+      .maybeSingle();
+
+    console.log('¿Existe el registro?:', existe);
+    console.log('Error al buscar:', errorBuscar);
+
     const { data, error } = await this.supabase
       .from(this.tabla)
-      .update(cambios)
+      .update(cambiosSinId)
       .eq('id', id)
       .select()
       .single();
+
     if (error) {
-      console.error('Error al actualizar el presupuesto:', error);
+      console.error('Error completo:', JSON.stringify(error, null, 2));
       throw error;
     }
     return data as Presupuesto;

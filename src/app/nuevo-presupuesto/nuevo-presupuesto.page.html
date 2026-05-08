@@ -3,15 +3,21 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Nuevo Presupuesto</ion-title>
+    <ion-title
+      >{{ modoEdicion ? 'Editar Presupuesto' : 'Nuevo Presupuesto' }}</ion-title
+    >
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="page-content">
   <div class="page-container">
     <div class="hero-section">
-      <p class="breadcrumb">Presupuestos / Nuevo</p>
-      <h1 class="page-title">Nuevo Presupuesto</h1>
+      <p class="breadcrumb">
+        Presupuestos / {{ modoEdicion ? 'Editar' : 'Nuevo' }}
+      </p>
+      <h1 class="page-title">
+        {{ modoEdicion ? 'Editar Presupuesto' : 'Nuevo Presupuesto' }}
+      </h1>
     </div>
 
     <form [formGroup]="presupuestoForm" class="form-layout">
@@ -144,7 +150,7 @@
           <div class="button-group">
             <button type="button" class="btn-guardar" (click)="guardar()">
               <ion-icon name="checkmark-circle"></ion-icon>
-              Guardar
+              {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
             </button>
             <button type="button" class="btn-cancelar" (click)="cancelar()">
               <ion-icon name="close"></ion-icon>

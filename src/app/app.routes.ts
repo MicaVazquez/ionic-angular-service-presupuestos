@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // {
-  //   path: 'home',
-  //   redirectTo: 'folder/inbox',
-  //   pathMatch: 'full',
-  // },
   {
     path: 'nuevo-presupuesto',
+    loadComponent: () =>
+      import('./nuevo-presupuesto/nuevo-presupuesto.page').then(
+        (m) => m.NuevoPresupuestoPage,
+      ),
+  },
+  {
+    path: 'nuevo-presupuesto/:id',
     loadComponent: () =>
       import('./nuevo-presupuesto/nuevo-presupuesto.page').then(
         (m) => m.NuevoPresupuestoPage,

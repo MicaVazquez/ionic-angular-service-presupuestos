@@ -1,0 +1,112 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="header-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="volver()">
+        <ion-icon slot="icon-only" name="arrowBack"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Detalle Presupuesto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="detalle-content">
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando presupuesto...</p>
+  </div>
+
+  <!-- Contenido -->
+  <div *ngIf="!cargando && presupuesto" class="detalle-container">
+    <!-- Header Card -->
+    <ion-card class="header-card">
+      <ion-card-header>
+        <ion-card-title class="titulo-presupuesto">
+          {{ presupuesto.cliente }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="card-content-header">
+        <div class="info-fila">
+          <span class="label">Fecha:</span>
+          <span class="valor">{{ formatearFecha(presupuesto.fecha) }}</span>
+        </div>
+        <div class="info-fila">
+          <span class="label">Presupuesto ID:</span>
+          <span class="valor">{{ presupuesto.id }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Items Card -->
+    <ion-card class="items-card">
+      <ion-card-header>
+        <ion-card-title>Detalles</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="card-content-items">
+        <div class="items-list">
+          <div *ngFor="let item of presupuesto.items" class="item-row">
+            <div class="item-descripcion">{{ item.descripcion }}</div>
+            <div class="item-precio">
+              ${{ item.precio.toLocaleString("es-AR") }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Separador -->
+        <div class="separator"></div>
+
+        <!-- Subtotal -->
+        <div class="total-row subtotal-row">
+          <span class="label">Subtotal:</span>
+          <span class="valor"
+            >${{ presupuesto.total.toLocaleString("es-AR") }}</span
+          >
+        </div>
+
+        <!-- Anticipo -->
+        <div class="total-row anticipo-row">
+          <span class="label"
+            >Anticipo ({{ presupuesto.anticipoPercent }}%):</span
+          >
+          <span class="valor"
+            >${{ montoAnticipo.toLocaleString("es-AR") }}</span
+          >
+        </div>
+
+        <!-- Saldo -->
+        <div class="total-row saldo-row">
+          <span class="label">Saldo:</span>
+          <span class="valor">${{ montoSaldo.toLocaleString("es-AR") }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Observaciones Card (si existen) -->
+    <ion-card *ngIf="presupuesto.observaciones" class="observaciones-card">
+      <ion-card-header>
+        <ion-card-title>Observaciones</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ presupuesto.observaciones }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Acciones -->
+    <div class="acciones-container">
+      <ion-button expand="block" color="primary" (click)="descargarPDF()">
+        <ion-icon name="documentOutline" slot="start"></ion-icon>
+        Descargar PDF
+      </ion-button>
+      <ion-button expand="block" color="success" (click)="compartirWhatsApp()">
+        <ion-icon name="shareOutline" slot="start"></ion-icon>
+        Compartir por WhatsApp
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!cargando && !presupuesto" class="error-container">
+    <p>No se encontró el presupuesto</p>
+    <ion-button (click)="volver()">Volver</ion-button>
+  </div>
+</ion-content>

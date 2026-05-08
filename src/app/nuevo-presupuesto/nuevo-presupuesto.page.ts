@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -17,7 +18,6 @@ import { Presupuesto } from '../interfaces/presupuesto';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database-service';
 @Component({
   selector: 'app-nuevo-presupuesto',
@@ -45,14 +45,36 @@ export class NuevoPresupuestoPage implements OnInit {
   subtotal = 0;
   anticipoAmount = 0;
   total = 0;
+  modoEdicion = false;
+  presupuestoId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private databaseService: DatabaseService,
   ) {}
 
   ngOnInit() {
+    this.inicializarFormulario();
+
+    this.route.params.subscribe((params) => {
+      const id = params['id'];
+      if (id) {
+        this.modoEdicion = true;
+        this.presupuestoId = id;
+        // Limpiar el item vacío que se agregó en inicializarFormulario
+        this.items.clear();
+        this.cargarPresupuesto(id);
+      }
+    });
+
+    this.presupuestoForm.valueChanges.subscribe(() => {
+      this.calcularTotal();
+    });
+  }
+
+  private inicializarFormulario() {
     this.presupuestoForm = this.fb.group({
       cliente: ['', Validators.required],
       fecha: [new Date().toISOString().slice(0, 10), Validators.required],
@@ -61,13 +83,47 @@ export class NuevoPresupuestoPage implements OnInit {
       observaciones: [''],
     });
 
-    // Arrancamos con un item
+    // Siempre arrancamos con un item vacío
     this.agregarItem();
+  }
 
-    // Escuchar cambios para recalcular total
-    this.presupuestoForm.valueChanges.subscribe(() => {
-      this.calcularTotal();
-    });
+  private cargarPresupuesto(id: string) {
+    this.databaseService
+      .obtenerPorId(id)
+      .then((presupuesto) => {
+        if (presupuesto) {
+          // Cargar datos en el formulario
+          this.presupuestoForm.patchValue({
+            cliente: presupuesto.cliente,
+            fecha: presupuesto.fecha,
+            anticipo: presupuesto.anticipoPercent,
+            observaciones: presupuesto.observaciones || '',
+          });
+
+          // Cargar items
+          const itemsArray = this.presupuestoForm.get('items') as FormArray;
+          presupuesto.items.forEach((item) => {
+            itemsArray.push(
+              this.fb.group({
+                descripcion: [item.descripcion, Validators.required],
+                precio: [item.precio, [Validators.required, Validators.min(0)]],
+              }),
+            );
+          });
+
+          this.calcularTotal();
+        }
+      })
+      .catch((error) => {
+        console.error('Error al cargar presupuesto:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar el presupuesto',
+          heightAuto: false,
+        });
+        this.router.navigate(['/mis-presupuestos']);
+      });
   }
 
   // Getter
@@ -108,11 +164,8 @@ export class NuevoPresupuestoPage implements OnInit {
     this.total = this.subtotal;
   }
 
-  // Guardar presupuesto
+  // Guardar presupuesto (nuevo o edición)
   guardar() {
-    console.log(this.presupuestoForm.value);
-    // this.presupuestoForm.markAllAsTouched();
-    // this.presupuestoForm.updateValueAndValidity();
     if (!this.presupuestoForm.valid) {
       Swal.fire({
         icon: 'error',
@@ -131,28 +184,46 @@ export class NuevoPresupuestoPage implements OnInit {
       anticipoMonto: this.anticipoAmount,
       items: this.items.value,
       total: this.total,
-      observaciones: this.presupuestoForm.get('observaciones')?.value, //consultar lo de observaciones
+      observaciones: this.presupuestoForm.get('observaciones')?.value,
     };
 
-    // Guardar
-
-    this.databaseService
-      .guardar(presupuesto)
-      .then(() => {
-        this.mostrarExito();
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Hubo un error al guardar el presupuesto',
-          heightAuto: false,
-          backdrop: true,
+    if (this.modoEdicion && this.presupuestoId) {
+      // Actualizar presupuesto existente
+      this.databaseService
+        .actualizar(this.presupuestoId, presupuesto)
+        .then(() => {
+          this.resetearFormulario();
+          this.mostrarExito('Presupuesto actualizado correctamente');
+          this.router.navigate(['/mis-presupuestos']);
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al actualizar el presupuesto',
+            heightAuto: false,
+            backdrop: true,
+          });
         });
-      });
-
-    // Aquí puedes redirigir a otra página si lo deseas
-    this.router.navigate(['/home']);
+    } else {
+      // Guardar presupuesto nuevo
+      this.databaseService
+        .guardar(presupuesto)
+        .then(() => {
+          this.resetearFormulario();
+          this.mostrarExito('Presupuesto guardado correctamente');
+          this.router.navigate(['/mis-presupuestos']);
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al guardar el presupuesto',
+            heightAuto: false,
+            backdrop: true,
+          });
+        });
+    }
   }
 
   // Cancelar y volver atrás
@@ -176,18 +247,31 @@ export class NuevoPresupuestoPage implements OnInit {
   confirmarCancelacion() {
     this.presupuestoForm.reset();
     // Aquí puedes redirigir a otra página si lo deseas
-    this.router.navigate(['/home']);
+    this.router.navigate(['/mis-presupuestos']);
   }
 
-  mostrarExito() {
+  mostrarExito(mensaje: string = 'Presupuesto guardado correctamente') {
     Swal.fire({
       icon: 'success',
       title: 'Éxito',
-      text: 'Presupuesto guardado correctamente',
+      text: mensaje,
       heightAuto: false,
       backdrop: true,
-    }).then(() => {
-      this.router.navigate(['/home']);
     });
+  }
+
+  private resetearFormulario() {
+    this.presupuestoForm.reset({
+      cliente: '',
+      fecha: new Date().toISOString().slice(0, 10),
+      anticipo: 0,
+      observaciones: '',
+    });
+    // Limpiar items y agregar uno vacío
+    this.items.clear();
+    this.agregarItem();
+    this.subtotal = 0;
+    this.anticipoAmount = 0;
+    this.total = 0;
   }
 }

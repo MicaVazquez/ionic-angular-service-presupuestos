@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -10,6 +11,7 @@ import {
   IonMenuButton,
 } from '@ionic/angular/standalone';
 import { DatabaseService } from '../services/database-service';
+import { PdfService } from '../services/pdf-service';
 import { Presupuesto } from '../interfaces/presupuesto';
 import Swal from 'sweetalert2';
 @Component({
@@ -33,7 +35,11 @@ export class MisPresupuestosPage implements OnInit {
   presupuestosFiltrados: Presupuesto[] = [];
   busqueda: string = '';
 
-  constructor(private dataSrv: DatabaseService) {}
+  constructor(
+    private dataSrv: DatabaseService,
+    private pdfSrv: PdfService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.dataSrv.obtenerTodos().then((data) => {
@@ -71,13 +77,13 @@ export class MisPresupuestosPage implements OnInit {
     return presupuesto.items.length;
   }
 
- 
   editarPresupuesto(presupuesto: Presupuesto) {
-    console.log('Editar', presupuesto);
+    if (!presupuesto.id) return;
+    this.router.navigate(['/nuevo-presupuesto', presupuesto.id]);
   }
 
   descargarPDF(presupuesto: Presupuesto) {
-    console.log('Descargar PDF', presupuesto);
+    this.pdfSrv.generarPDF(presupuesto);
   }
 
   compartirWhatsApp(presupuesto: Presupuesto) {
@@ -101,7 +107,9 @@ export class MisPresupuestosPage implements OnInit {
 
     try {
       await this.dataSrv.eliminar(presupuesto.id);
-      this.presupuestos = this.presupuestos.filter((p) => p.id !== presupuesto.id);
+      this.presupuestos = this.presupuestos.filter(
+        (p) => p.id !== presupuesto.id,
+      );
       this.filtrarPresupuestos();
     } catch (error) {
       console.error(error);

@@ -31,6 +31,7 @@
     "@ionic/angular": "^8.0.0",
     "@supabase/supabase-js": "^2.91.1",
     "ionicons": "^7.0.0",
+    "jspdf": "^4.2.1",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.26.17",
     "tslib": "^2.3.0",
