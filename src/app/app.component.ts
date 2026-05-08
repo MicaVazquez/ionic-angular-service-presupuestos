@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonApp,
@@ -7,8 +6,6 @@ import {
   IonMenu,
   IonContent,
   IonList,
-  IonListHeader,
-  IonNote,
   IonMenuToggle,
   IonItem,
   IonIcon,
@@ -18,26 +15,9 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  mailOutline,
-  mailSharp,
-  paperPlaneOutline,
-  paperPlaneSharp,
-  heartOutline,
-  heartSharp,
-  archiveOutline,
-  archiveSharp,
-  trashOutline,
-  trashSharp,
-  warningOutline,
-  warningSharp,
-  bookmarkOutline,
-  bookmarkSharp,
   addCircle,
   addCircleOutline,
   addCircleSharp,
-  homeOutline,
-  homeSharp,
-  addOutline,
   downloadOutline,
   close,
   checkmark,
@@ -46,6 +26,8 @@ import {
   documentText,
   documentTextSharp,
   checkmarkCircle,
+  folderOutline,
+  folderSharp,
 } from 'ionicons/icons';
 
 @Component({
@@ -70,7 +52,6 @@ import {
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Inicio', url: '/home', icon: 'home' },
     {
       title: 'Nuevo Presupuesto',
       url: '/nuevo-presupuesto',
@@ -79,20 +60,20 @@ export class AppComponent {
     {
       title: 'Mis Presupuestos',
       url: '/mis-presupuestos',
-      icon: 'document-text',
+      icon: 'folder',
     },
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+
   constructor() {
     addIcons({
-      homeOutline,
-      homeSharp,
       addCircle,
       addCircleOutline,
       addCircleSharp,
       documentTextOutline,
       documentText,
       documentTextSharp,
+      folderOutline,
+      folderSharp,
       downloadOutline,
       close,
       checkmark,

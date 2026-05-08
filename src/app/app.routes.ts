@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'mis-presupuestos',
+    pathMatch: 'full',
+  },
+  {
     path: 'nuevo-presupuesto',
     loadComponent: () =>
       import('./nuevo-presupuesto/nuevo-presupuesto.page').then(
@@ -17,8 +22,8 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    loadComponent: () =>
-      import('./inicio/inicio.component').then((m) => m.InicioComponent),
+    redirectTo: 'mis-presupuestos',
+    pathMatch: 'full',
   },
   {
     path: 'mis-presupuestos',
@@ -28,8 +33,12 @@ export const routes: Routes = [
       ),
   },
   {
-    path: '**',
+    path: 'splash',
     loadComponent: () =>
       import('./splash/splash.component').then((m) => m.SplashComponent),
+  },
+  {
+    path: '**',
+    redirectTo: 'mis-presupuestos',
   },
 ];

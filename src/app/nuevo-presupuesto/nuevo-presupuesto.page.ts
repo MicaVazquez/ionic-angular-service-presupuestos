@@ -26,14 +26,13 @@ import { DatabaseService } from '../services/database-service';
   standalone: true,
   imports: [
     IonButtons,
-    IonLabel,
+
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     CommonModule,
-    IonButton,
-    IonInput,
+
     FormsModule,
     IonIcon,
     ReactiveFormsModule,
@@ -177,14 +176,15 @@ export class NuevoPresupuestoPage implements OnInit {
       return;
     }
 
+    const observaciones = this.presupuestoForm.get('observaciones')?.value;
     const presupuesto: Presupuesto = {
       cliente: this.presupuestoForm.get('cliente')?.value,
       fecha: this.presupuestoForm.get('fecha')?.value,
       anticipoPercent: this.presupuestoForm.get('anticipo')?.value || 0,
-      anticipoMonto: this.anticipoAmount,
       items: this.items.value,
       total: this.total,
-      observaciones: this.presupuestoForm.get('observaciones')?.value,
+      estado: 'finalizado',
+      ...(observaciones ? { observaciones } : {}),
     };
 
     if (this.modoEdicion && this.presupuestoId) {

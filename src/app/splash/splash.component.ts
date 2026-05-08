@@ -19,7 +19,7 @@ export class SplashComponent implements OnInit {
     this.platform.ready().then(() => {
       SplashScreen.hide().then(() => {
         setTimeout(() => {
-          this.router_service.navigate(['home']);
+          this.router_service.navigate(['mis-presupuestos']);
         }, 3000);
       });
     });

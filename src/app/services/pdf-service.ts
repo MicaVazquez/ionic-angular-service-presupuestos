@@ -28,10 +28,6 @@ export class PdfService {
     doc.setFontSize(24);
     doc.text('PRESUPUESTO', 20, 20);
 
-    // Número/ID (si existe)
-    doc.setFontSize(10);
-    doc.text(`ID: ${presupuesto.id || 'N/A'}`, 20, 28);
-
     yPos = 45;
 
     // ===== INFORMACIÓN CLIENTE =====
@@ -41,21 +37,21 @@ export class PdfService {
     doc.text('INFORMACIÓN DEL CLIENTE', 20, yPos);
 
     yPos += 8;
+    const tieneObservaciones = !!presupuesto.observaciones?.trim();
+    const altoBoxCliente = tieneObservaciones ? 25 : 18;
     doc.setFillColor(240, 240, 240);
-    doc.rect(20, yPos - 5, pageWidth - 40, 25, 'F');
+    doc.rect(20, yPos - 5, pageWidth - 40, altoBoxCliente, 'F');
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(51, 51, 51);
     doc.text(`Cliente: ${presupuesto.cliente}`, 25, yPos);
     doc.text(`Fecha: ${this.formatearFecha(presupuesto.fecha)}`, 25, yPos + 7);
-    doc.text(
-      `Observaciones: ${presupuesto.observaciones || 'N/A'}`,
-      25,
-      yPos + 14,
-    );
+    if (tieneObservaciones) {
+      doc.text(`Observaciones: ${presupuesto.observaciones}`, 25, yPos + 14);
+    }
 
-    yPos += 35;
+    yPos += tieneObservaciones ? 35 : 28;
 
     // ===== TABLA DE ITEMS =====
     doc.setTextColor(26, 95, 122);
@@ -109,8 +105,8 @@ export class PdfService {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
 
-    doc.rect(pageWidth - 70, yPos, 50, 8, 'F');
-    doc.text('SUBTOTAL:', pageWidth - 65, yPos + 5.5);
+    doc.rect(pageWidth - 100, yPos, 80, 8, 'F');
+    doc.text('SUBTOTAL:', pageWidth - 95, yPos + 5.5);
     doc.text(
       `$${presupuesto.total.toLocaleString('es-AR')}`,
       pageWidth - 25,
@@ -122,17 +118,16 @@ export class PdfService {
 
     // Anticipo
     const montoAnticipo =
-      presupuesto.anticipoMonto ||
       (presupuesto.total * presupuesto.anticipoPercent) / 100;
     doc.setFillColor(240, 240, 240);
     doc.setTextColor(51, 51, 51);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
 
-    doc.rect(pageWidth - 70, yPos, 50, 8, 'F');
+    doc.rect(pageWidth - 100, yPos, 80, 8, 'F');
     doc.text(
       `ANTICIPO (${presupuesto.anticipoPercent}%):`,
-      pageWidth - 65,
+      pageWidth - 95,
       yPos + 5.5,
     );
     doc.text(
@@ -151,8 +146,8 @@ export class PdfService {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
 
-    doc.rect(pageWidth - 70, yPos, 50, 8, 'F');
-    doc.text('SALDO:', pageWidth - 65, yPos + 5.5);
+    doc.rect(pageWidth - 100, yPos, 80, 8, 'F');
+    doc.text('SALDO:', pageWidth - 95, yPos + 5.5);
     doc.text(
       `$${montoSaldo.toLocaleString('es-AR')}`,
       pageWidth - 25,

@@ -1,104 +1,90 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Mis Presupuestos</ion-title>
+  <ion-toolbar class="toolbar-presupuestos">
+    <div class="header-shell">
+      <ion-buttons class="menu-shell">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Mis<br />Presupuestos</ion-title>
+      <button class="header-search" type="button" aria-label="Buscar">
+        <span aria-hidden="true">&#9906;</span>
+      </button>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Buscador -->
   <div class="buscador-wrapper">
     <div class="buscador">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon" aria-hidden="true">&#9906;</span>
       <input
         type="text"
         [(ngModel)]="busqueda"
         (ngModelChange)="filtrarPresupuestos()"
-        placeholder="Buscar por cliente..."
+        placeholder="Buscar por cliente o material..."
         class="input-busqueda"
       />
     </div>
   </div>
 
-  <!-- Badge Total Borradores -->
-  <div class="borradores-badge">
-    <span class="borradores-icono">📋</span>
-    <span class="borradores-texto">Total de Borradores</span>
-    <span class="borradores-count">{{ totalBorradores }}</span>
-  </div>
-
-  <!-- Lista de Presupuestos -->
   <div class="lista-presupuestos">
     <div
       class="card-presupuesto"
       *ngFor="let presupuesto of presupuestosFiltrados"
     >
-      <!-- Cabecera de la Card -->
-      <div class="card-header">
-        <div class="card-info">
-          <div class="cliente-row">
-            <span class="doc-icono">📄</span>
-            <span class="cliente-nombre">{{ presupuesto.cliente }}</span>
-          </div>
-          <span class="fecha-creacion"
-            >{{ formatearFecha(presupuesto.fecha) }}</span
-          >
+      <div class="card-resumen">
+        <div class="cliente-bloque">
+          <span class="card-label">CLIENTE</span>
+          <h2 class="cliente-nombre">{{ presupuesto.cliente }}</h2>
+          <span class="fecha-creacion">{{ formatearFecha(presupuesto.fecha) }}</span>
         </div>
-        <div class="card-total">
-          <span class="total-monto"
-            >${{ getTotalPresupuesto(presupuesto).toFixed(2) }}</span
-          >
-          <span class="total-items"
-            >{{ getTotalItems(presupuesto) }} items</span
-          >
+        <div class="total-bloque">
+          <span class="card-label">INVERSION TOTAL</span>
+          <strong class="total-monto">
+            ${{ formatearMonto(getTotalPresupuesto(presupuesto)) }}
+          </strong>
         </div>
       </div>
 
-      <!-- Items -->
-      <div class="card-items">
-        <p class="items-titulo">Items:</p>
-        <ul class="items-lista">
-          <li *ngFor="let item of presupuesto.items" class="item-linea">
-            • {{ item.descripcion }} — ${{ item.precio | number:'1.2-2' }}
-          </li>
-        </ul>
-      </div>
-
-      <!-- Acciones -->
       <div class="card-acciones">
-        <div class="acciones-fila-1">
-          <button
-            class="btn btn-editar"
-            (click)="editarPresupuesto(presupuesto)"
-          >
-            <span class="btn-icono">✏️</span> Editar
-          </button>
-          <button class="btn btn-pdf" (click)="descargarPDF(presupuesto)">
-            <span class="btn-icono">⬇️</span> PDF
-          </button>
-        </div>
-        <div class="acciones-fila-2">
-          <button
-            class="btn btn-whatsapp"
-            (click)="compartirWhatsApp(presupuesto)"
-          >
-            <span class="btn-icono">🔗</span> WhatsApp
-          </button>
-          <button
-            class="btn btn-eliminar"
-            (click)="eliminarPresupuesto(presupuesto)"
-          >
-            <span class="btn-icono">🗑️</span> Eliminar
-          </button>
-        </div>
+        <button
+          class="btn btn-editar"
+          (click)="editarPresupuesto(presupuesto)"
+        >
+          <span class="btn-icono" aria-hidden="true">&#9998;</span>
+          Editar
+        </button>
+        <button class="btn btn-pdf" (click)="descargarPDF(presupuesto)">
+          <span class="btn-icono" aria-hidden="true">&#8681;</span>
+          PDF
+        </button>
+        <button
+          class="btn btn-whatsapp"
+          (click)="compartirWhatsApp(presupuesto)"
+        >
+          <span class="btn-icono" aria-hidden="true">&#9993;</span>
+          WhatsApp
+        </button>
+        <button
+          class="btn btn-eliminar"
+          (click)="eliminarPresupuesto(presupuesto)"
+        >
+          <span class="btn-icono" aria-hidden="true">&#128465;</span>
+          Eliminar
+        </button>
       </div>
     </div>
 
-    <!-- Estado vacío -->
     <div class="empty-state" *ngIf="presupuestosFiltrados.length === 0">
       <p>No se encontraron presupuestos.</p>
     </div>
   </div>
+
+  <button
+    class="btn-flotante"
+    type="button"
+    (click)="nuevoPresupuesto()"
+    aria-label="Crear presupuesto"
+  >
+    +
+  </button>
 </ion-content>

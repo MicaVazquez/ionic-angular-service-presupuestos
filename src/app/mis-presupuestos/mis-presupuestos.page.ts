@@ -55,14 +55,29 @@ export class MisPresupuestosPage implements OnInit {
       return;
     }
     this.presupuestosFiltrados = this.presupuestos.filter((p) => {
-      return (p.cliente || '').toLowerCase().includes(q);
+      const cliente = (p.cliente || '').toLowerCase();
+      const items = (p.items || [])
+        .map((item) => item.descripcion || '')
+        .join(' ')
+        .toLowerCase();
+      return cliente.includes(q) || items.includes(q);
     });
   }
 
   formatearFecha(fecha?: string | number | Date) {
     if (!fecha) return '';
     const d = new Date(fecha);
-    return d.toLocaleDateString();
+    const dia = d.getDate();
+    const mes = d.toLocaleDateString('es-AR', { month: 'long' });
+    const mesCapitalizado = mes.charAt(0).toUpperCase() + mes.slice(1);
+    return `${dia} de ${mesCapitalizado}, ${d.getFullYear()}`;
+  }
+
+  formatearMonto(monto: number) {
+    return monto.toLocaleString('es-AR', {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    });
   }
 
   getTotalPresupuesto(presupuesto: Presupuesto) {
@@ -80,6 +95,10 @@ export class MisPresupuestosPage implements OnInit {
   editarPresupuesto(presupuesto: Presupuesto) {
     if (!presupuesto.id) return;
     this.router.navigate(['/nuevo-presupuesto', presupuesto.id]);
+  }
+
+  nuevoPresupuesto() {
+    this.router.navigate(['/nuevo-presupuesto']);
   }
 
   descargarPDF(presupuesto: Presupuesto) {
@@ -124,13 +143,6 @@ export class MisPresupuestosPage implements OnInit {
   }
 
   get totalBorradores() {
-    // Si no existe campo `estado`, consideramos 'borrador' a los presupuestos con total === 0
-    return this.presupuestos.filter((p) =>
-      (p as any).estado
-        ? ((p as any).estado || '').toLowerCase() === 'borrador'
-        : typeof p.total === 'number'
-          ? p.total === 0
-          : false,
-    ).length;
+    return this.presupuestos.filter((p) => p.estado === 'borrador').length;
   }
 }
