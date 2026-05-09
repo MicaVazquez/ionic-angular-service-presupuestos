@@ -7,16 +7,35 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonLabel,
-  IonInput,
-  IonButton,
   IonIcon,
   IonButtons,
   IonMenuButton,
 } from '@ionic/angular/standalone';
 import { Presupuesto } from '../interfaces/presupuesto';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+
+// Validator: rechaza strings que solo contienen espacios
+function noSoloEspacios(control: AbstractControl): ValidationErrors | null {
+  const valor = control.value;
+  if (typeof valor !== 'string') return null;
+  if (valor.length === 0) return null; // que required se encargue del vacío
+  return valor.trim().length === 0 ? { soloEspacios: true } : null;
+}
+
+// Validator: rechaza strings que contienen números
+function sinNumeros(control: AbstractControl): ValidationErrors | null {
+  const valor = control.value;
+  if (typeof valor !== 'string' || valor.length === 0) return null;
+  return /\d/.test(valor) ? { contieneNumeros: true } : null;
+}
 import Swal from 'sweetalert2';
 import { DatabaseService } from '../services/database-service';
 @Component({
@@ -46,6 +65,8 @@ export class NuevoPresupuestoPage implements OnInit {
   total = 0;
   modoEdicion = false;
   presupuestoId: string | null = null;
+  modalExitoVisible = false;
+  mensajeExito = '';
 
   constructor(
     private fb: FormBuilder,
@@ -75,11 +96,23 @@ export class NuevoPresupuestoPage implements OnInit {
 
   private inicializarFormulario() {
     this.presupuestoForm = this.fb.group({
-      cliente: ['', Validators.required],
+      cliente: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(100),
+          noSoloEspacios,
+          sinNumeros,
+        ],
+      ],
       fecha: [new Date().toISOString().slice(0, 10), Validators.required],
-      anticipo: [0, [Validators.required, Validators.min(0)]],
-      items: this.fb.array([]),
-      observaciones: [''],
+      anticipo: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      items: this.fb.array([], Validators.required),
+      observaciones: ['', Validators.maxLength(1000)],
     });
 
     // Siempre arrancamos con un item vacío
@@ -104,8 +137,19 @@ export class NuevoPresupuestoPage implements OnInit {
           presupuesto.items.forEach((item) => {
             itemsArray.push(
               this.fb.group({
-                descripcion: [item.descripcion, Validators.required],
-                precio: [item.precio, [Validators.required, Validators.min(0)]],
+                descripcion: [
+                  item.descripcion,
+                  [
+                    Validators.required,
+                    Validators.minLength(3),
+                    Validators.maxLength(500),
+                    noSoloEspacios,
+                  ],
+                ],
+                precio: [
+                  item.precio,
+                  [Validators.required, Validators.min(0.01)],
+                ],
               }),
             );
           });
@@ -133,8 +177,16 @@ export class NuevoPresupuestoPage implements OnInit {
   // Crear item
   nuevoItem(): FormGroup {
     return this.fb.group({
-      descripcion: ['', Validators.required],
-      precio: [0, [Validators.required, Validators.min(0)]],
+      descripcion: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(500),
+          noSoloEspacios,
+        ],
+      ],
+      precio: [null, [Validators.required, Validators.min(0.01)]],
     });
   }
 
@@ -163,20 +215,43 @@ export class NuevoPresupuestoPage implements OnInit {
     this.total = this.subtotal;
   }
 
+  // Helpers para validación en el template
+  campoInvalido(nombre: string): boolean {
+    const control = this.presupuestoForm.get(nombre);
+    return !!control && control.invalid && (control.touched || control.dirty);
+  }
+
+  itemCampoInvalido(index: number, nombre: string): boolean {
+    const control = this.items.at(index).get(nombre);
+    return !!control && control.invalid && (control.touched || control.dirty);
+  }
+
+  private marcarTodoComoTocado(grupo: FormGroup | FormArray) {
+    Object.values(grupo.controls).forEach((control) => {
+      control.markAsTouched();
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        this.marcarTodoComoTocado(control);
+      }
+    });
+  }
+
   // Guardar presupuesto (nuevo o edición)
   guardar() {
     if (!this.presupuestoForm.valid) {
+      this.marcarTodoComoTocado(this.presupuestoForm);
       Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: 'Completá los campos obligatorios',
+        title: 'Revisá los campos',
+        text: 'Hay datos faltantes o inválidos en el formulario',
         heightAuto: false,
         backdrop: true,
       });
       return;
     }
 
-    const observaciones = this.presupuestoForm.get('observaciones')?.value;
+    const observacionesRaw = this.presupuestoForm.get('observaciones')?.value;
+    const observaciones =
+      typeof observacionesRaw === 'string' ? observacionesRaw.trim() : '';
     const presupuesto: Presupuesto = {
       cliente: this.presupuestoForm.get('cliente')?.value,
       fecha: this.presupuestoForm.get('fecha')?.value,
@@ -184,7 +259,7 @@ export class NuevoPresupuestoPage implements OnInit {
       items: this.items.value,
       total: this.total,
       estado: 'finalizado',
-      ...(observaciones ? { observaciones } : {}),
+      observaciones: observaciones || null,
     };
 
     if (this.modoEdicion && this.presupuestoId) {
@@ -194,7 +269,6 @@ export class NuevoPresupuestoPage implements OnInit {
         .then(() => {
           this.resetearFormulario();
           this.mostrarExito('Presupuesto actualizado correctamente');
-          this.router.navigate(['/mis-presupuestos']);
         })
         .catch((error) => {
           Swal.fire({
@@ -212,7 +286,6 @@ export class NuevoPresupuestoPage implements OnInit {
         .then(() => {
           this.resetearFormulario();
           this.mostrarExito('Presupuesto guardado correctamente');
-          this.router.navigate(['/mis-presupuestos']);
         })
         .catch((error) => {
           Swal.fire({
@@ -251,13 +324,13 @@ export class NuevoPresupuestoPage implements OnInit {
   }
 
   mostrarExito(mensaje: string = 'Presupuesto guardado correctamente') {
-    Swal.fire({
-      icon: 'success',
-      title: 'Éxito',
-      text: mensaje,
-      heightAuto: false,
-      backdrop: true,
-    });
+    this.mensajeExito = mensaje;
+    this.modalExitoVisible = true;
+  }
+
+  cerrarModalExito() {
+    this.modalExitoVisible = false;
+    this.router.navigate(['/mis-presupuestos']);
   }
 
   private resetearFormulario() {

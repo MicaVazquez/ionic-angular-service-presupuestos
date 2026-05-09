@@ -6,7 +6,7 @@ export interface Presupuesto {
   items: ItemPresupuesto[];
   total: number;
   estado: 'borrador' | 'finalizado';
-  observaciones?: string;
+  observaciones?: string | null;
 }
 
 export interface ItemPresupuesto {

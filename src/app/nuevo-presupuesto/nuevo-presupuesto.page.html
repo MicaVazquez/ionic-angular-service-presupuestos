@@ -35,23 +35,90 @@
                 <label class="field-label">Cliente</label>
                 <input
                   class="form-input"
+                  [class.input-error]="campoInvalido('cliente')"
                   formControlName="cliente"
                   placeholder="Nombre completo del cliente"
                   type="text"
                 />
+                <ng-container *ngIf="campoInvalido('cliente')">
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('cliente')?.errors?.['required']"
+                  >
+                    El cliente es obligatorio
+                  </p>
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('cliente')?.errors?.['minlength']"
+                  >
+                    El nombre debe tener al menos 2 caracteres
+                  </p>
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('cliente')?.errors?.['maxlength']"
+                  >
+                    El nombre no puede superar los 100 caracteres
+                  </p>
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('cliente')?.errors?.['soloEspacios']"
+                  >
+                    El nombre no puede contener solo espacios
+                  </p>
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('cliente')?.errors?.['contieneNumeros']"
+                  >
+                    El nombre no puede contener números
+                  </p>
+                </ng-container>
               </div>
               <div class="form-field">
                 <label class="field-label">Fecha</label>
-                <input class="form-input" formControlName="fecha" type="date" />
+                <input
+                  class="form-input"
+                  [class.input-error]="campoInvalido('fecha')"
+                  formControlName="fecha"
+                  type="date"
+                />
+                <p
+                  class="error-message"
+                  *ngIf="campoInvalido('fecha') && presupuestoForm.get('fecha')?.errors?.['required']"
+                >
+                  La fecha es obligatoria
+                </p>
               </div>
               <div class="form-field">
                 <label class="field-label">Anticipo %</label>
                 <input
                   class="form-input"
+                  [class.input-error]="campoInvalido('anticipo')"
                   formControlName="anticipo"
                   placeholder="0"
                   type="number"
+                  min="0"
+                  max="100"
                 />
+                <ng-container *ngIf="campoInvalido('anticipo')">
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('anticipo')?.errors?.['required']"
+                  >
+                    El anticipo es obligatorio (puede ser 0)
+                  </p>
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('anticipo')?.errors?.['min']"
+                  >
+                    El anticipo no puede ser negativo
+                  </p>
+                  <p
+                    class="error-message"
+                    *ngIf="presupuestoForm.get('anticipo')?.errors?.['max']"
+                  >
+                    El anticipo no puede ser mayor a 100%
+                  </p>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -76,6 +143,7 @@
               [formGroupName]="i"
               class="item-card"
             >
+
               <div class="item-accent"></div>
               <div class="item-content">
                 <div class="item-header">
@@ -94,10 +162,37 @@
                     <label class="field-label">Descripción</label>
                     <textarea
                       class="form-input textarea"
+                      [class.input-error]="itemCampoInvalido(i, 'descripcion')"
                       formControlName="descripcion"
                       placeholder="Detalles del ítem, materiales, acabados..."
                       rows="3"
                     ></textarea>
+                    <ng-container *ngIf="itemCampoInvalido(i, 'descripcion')">
+                      <p
+                        class="error-message"
+                        *ngIf="item.get('descripcion')?.errors?.['required']"
+                      >
+                        La descripción es obligatoria
+                      </p>
+                      <p
+                        class="error-message"
+                        *ngIf="item.get('descripcion')?.errors?.['minlength']"
+                      >
+                        La descripción debe tener al menos 3 caracteres
+                      </p>
+                      <p
+                        class="error-message"
+                        *ngIf="item.get('descripcion')?.errors?.['maxlength']"
+                      >
+                        La descripción no puede superar los 500 caracteres
+                      </p>
+                      <p
+                        class="error-message"
+                        *ngIf="item.get('descripcion')?.errors?.['soloEspacios']"
+                      >
+                        La descripción no puede contener solo espacios
+                      </p>
+                    </ng-container>
                   </div>
                   <div class="form-field">
                     <label class="field-label">Precio Unitario</label>
@@ -105,14 +200,59 @@
                       <span class="price-symbol">$</span>
                       <input
                         class="form-input price-input"
+                        [class.input-error]="itemCampoInvalido(i, 'precio')"
                         formControlName="precio"
                         placeholder="0.00"
                         type="number"
+                        min="0.01"
+                        step="0.01"
                       />
                     </div>
+                    <ng-container *ngIf="itemCampoInvalido(i, 'precio')">
+                      <p
+                        class="error-message"
+                        *ngIf="item.get('precio')?.errors?.['required']"
+                      >
+                        El precio es obligatorio
+                      </p>
+                      <p
+                        class="error-message"
+                        *ngIf="item.get('precio')?.errors?.['min']"
+                      >
+                        El precio debe ser mayor a 0
+                      </p>
+                    </ng-container>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- OBSERVACIONES SECTION -->
+        <section class="form-section">
+          <div class="section-header">
+            <h2 class="section-title">Observaciones</h2>
+            <div class="divider"></div>
+          </div>
+          <div class="form-card">
+            <div class="form-field full-width">
+              <label class="field-label">
+                Notas adicionales (forma de pago, plazos, aclaraciones...)
+              </label>
+              <textarea
+                class="form-input textarea"
+                [class.input-error]="campoInvalido('observaciones')"
+                formControlName="observaciones"
+                placeholder="Ej: Saldo contra entrega, plazo 30 días, forma de pago..."
+                rows="4"
+              ></textarea>
+              <p
+                class="error-message"
+                *ngIf="campoInvalido('observaciones') && presupuestoForm.get('observaciones')?.errors?.['maxlength']"
+              >
+                Las observaciones no pueden superar los 1000 caracteres
+              </p>
             </div>
           </div>
         </section>
@@ -160,5 +300,28 @@
         </div>
       </aside>
     </form>
+  </div>
+
+  <div
+    class="modal-exito-backdrop"
+    *ngIf="modalExitoVisible"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-exito-titulo"
+  >
+    <div class="modal-exito">
+      <div class="modal-exito-icono">
+        <ion-icon name="checkmark-circle"></ion-icon>
+      </div>
+
+      <h2 id="modal-exito-titulo">¡Todo listo!</h2>
+      <p>
+        El presupuesto se ha guardado correctamente en la carpeta del cliente.
+      </p>
+
+      <button type="button" class="modal-exito-btn" (click)="cerrarModalExito()">
+        Entendido
+      </button>
+    </div>
   </div>
 </ion-content>
