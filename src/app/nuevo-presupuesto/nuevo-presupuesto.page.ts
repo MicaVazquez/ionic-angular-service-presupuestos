@@ -36,8 +36,8 @@ function sinNumeros(control: AbstractControl): ValidationErrors | null {
   if (typeof valor !== 'string' || valor.length === 0) return null;
   return /\d/.test(valor) ? { contieneNumeros: true } : null;
 }
-import Swal from 'sweetalert2';
 import { DatabaseService } from '../services/database-service';
+import { AlertService } from '../services/alert.service';
 @Component({
   selector: 'app-nuevo-presupuesto',
   templateUrl: './nuevo-presupuesto.page.html',
@@ -45,13 +45,11 @@ import { DatabaseService } from '../services/database-service';
   standalone: true,
   imports: [
     IonButtons,
-
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     CommonModule,
-
     FormsModule,
     IonIcon,
     ReactiveFormsModule,
@@ -73,6 +71,7 @@ export class NuevoPresupuestoPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private databaseService: DatabaseService,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit() {
@@ -159,13 +158,11 @@ export class NuevoPresupuestoPage implements OnInit {
       })
       .catch((error) => {
         console.error('Error al cargar presupuesto:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo cargar el presupuesto',
-          heightAuto: false,
-        });
-        this.router.navigate(['/mis-presupuestos']);
+        this.alertService.error(
+          'Error',
+          'No se pudo cargar el presupuesto',
+          () => this.router.navigate(['/mis-presupuestos']),
+        );
       });
   }
 
@@ -239,13 +236,10 @@ export class NuevoPresupuestoPage implements OnInit {
   guardar() {
     if (!this.presupuestoForm.valid) {
       this.marcarTodoComoTocado(this.presupuestoForm);
-      Swal.fire({
-        icon: 'error',
-        title: 'Revisá los campos',
-        text: 'Hay datos faltantes o inválidos en el formulario',
-        heightAuto: false,
-        backdrop: true,
-      });
+      this.alertService.error(
+        'Revisá los campos',
+        'Hay datos faltantes o inválidos en el formulario',
+      );
       return;
     }
 
@@ -271,13 +265,10 @@ export class NuevoPresupuestoPage implements OnInit {
           this.mostrarExito('Presupuesto actualizado correctamente');
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un error al actualizar el presupuesto',
-            heightAuto: false,
-            backdrop: true,
-          });
+          this.alertService.error(
+            'Error',
+            'Hubo un error al actualizar el presupuesto',
+          );
         });
     } else {
       // Guardar presupuesto nuevo
@@ -288,33 +279,21 @@ export class NuevoPresupuestoPage implements OnInit {
           this.mostrarExito('Presupuesto guardado correctamente');
         })
         .catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un error al guardar el presupuesto',
-            heightAuto: false,
-            backdrop: true,
-          });
+          this.alertService.error(
+            'Error',
+            'Hubo un error al guardar el presupuesto',
+          );
         });
     }
   }
 
   // Cancelar y volver atrás
   cancelar() {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Se perderán los cambios no guardados',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, cancelar',
-      cancelButtonText: 'No, volver',
-      heightAuto: false,
-      backdrop: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.confirmarCancelacion();
-      }
-    });
+    this.alertService.confirmacion(
+      '¿Estás seguro?',
+      'Se perderán los cambios no guardados',
+      () => this.confirmarCancelacion(),
+    );
   }
 
   confirmarCancelacion() {

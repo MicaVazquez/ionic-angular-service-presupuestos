@@ -18,7 +18,7 @@ import {
 import { Presupuesto } from '../interfaces/presupuesto';
 import { DatabaseService } from '../services/database-service';
 import { PdfService } from '../services/pdf-service';
-import Swal from 'sweetalert2';
+import { AlertService } from '../services/alert.service';
 import {
   share,
   shareOutline,
@@ -58,6 +58,7 @@ export class DetallePresupuestoComponent implements OnInit {
     private router: Router,
     private dataSrv: DatabaseService,
     private pdfSrv: PdfService,
+    private alertService: AlertService,
   ) {
     addIcons({ share, shareOutline, documentOutline, arrowBack });
   }
@@ -89,13 +90,11 @@ export class DetallePresupuestoComponent implements OnInit {
       .catch((error) => {
         console.error('Error:', error);
         this.cargando = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo cargar el presupuesto',
-          heightAuto: false,
-        });
-        this.router.navigate(['/mis-presupuestos']);
+        this.alertService.error(
+          'Error',
+          'No se pudo cargar el presupuesto',
+          () => this.router.navigate(['/mis-presupuestos']),
+        );
       });
   }
 

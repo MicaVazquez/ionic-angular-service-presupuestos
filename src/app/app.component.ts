@@ -13,6 +13,9 @@ import {
   IonRouterOutlet,
   IonRouterLink,
 } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
+import { AlertModalComponent } from './components/alert-modal.component';
+import { AlertService } from './services/alert.service';
 import { addIcons } from 'ionicons';
 import {
   addCircle,
@@ -26,6 +29,9 @@ import {
   documentText,
   documentTextSharp,
   checkmarkCircle,
+  closeCircle,
+  warning,
+  informationCircle,
   folderOutline,
   folderSharp,
 } from 'ionicons/icons';
@@ -37,6 +43,7 @@ import {
   imports: [
     RouterLink,
     RouterLinkActive,
+    CommonModule,
     IonApp,
     IonSplitPane,
     IonMenu,
@@ -48,6 +55,7 @@ import {
     IonLabel,
     IonRouterLink,
     IonRouterOutlet,
+    AlertModalComponent,
   ],
 })
 export class AppComponent {
@@ -64,7 +72,10 @@ export class AppComponent {
     },
   ];
 
-  constructor() {
+  alert$ = this.alertService.alert$;
+  visible$ = this.alertService.visible$;
+
+  constructor(private alertService: AlertService) {
     addIcons({
       addCircle,
       addCircleOutline,
@@ -79,6 +90,13 @@ export class AppComponent {
       checkmark,
       add,
       checkmarkCircle,
+      closeCircle,
+      warning,
+      informationCircle,
     });
+  }
+
+  onAlertClose() {
+    this.alertService.cerrar();
   }
 }

@@ -13,7 +13,7 @@ import {
 import { DatabaseService } from '../services/database-service';
 import { PdfService } from '../services/pdf-service';
 import { Presupuesto } from '../interfaces/presupuesto';
-import Swal from 'sweetalert2';
+import { AlertService } from '../services/alert.service';
 @Component({
   selector: 'app-mis-presupuestos',
   templateUrl: './mis-presupuestos.page.html',
@@ -39,6 +39,7 @@ export class MisPresupuestosPage implements OnInit {
     private dataSrv: DatabaseService,
     private pdfSrv: PdfService,
     private router: Router,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit() {
@@ -109,37 +110,28 @@ export class MisPresupuestosPage implements OnInit {
     console.log('Compartir WhatsApp', presupuesto);
   }
 
-  async eliminarPresupuesto(presupuesto: Presupuesto) {
+  eliminarPresupuesto(presupuesto: Presupuesto) {
     if (!presupuesto.id) return;
 
-    const result = await Swal.fire({
-      title: '¿Eliminar presupuesto?',
-      text: `Se eliminará el presupuesto de ${presupuesto.cliente}`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      heightAuto: false,
-      backdrop: true,
-    });
-    if (!result.isConfirmed) return;
-
-    try {
-      await this.dataSrv.eliminar(presupuesto.id);
-      this.presupuestos = this.presupuestos.filter(
-        (p) => p.id !== presupuesto.id,
-      );
-      this.filtrarPresupuestos();
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo eliminar el presupuesto',
-        heightAuto: false,
-        backdrop: true,
-      });
-    }
+    this.alertService.confirmacion(
+      '¿Eliminar presupuesto?',
+      `Se eliminará el presupuesto de ${presupuesto.cliente}`,
+      async () => {
+        try {
+          await this.dataSrv.eliminar(presupuesto.id!);
+          this.presupuestos = this.presupuestos.filter(
+            (p) => p.id !== presupuesto.id,
+          );
+          this.filtrarPresupuestos();
+        } catch (error) {
+          console.error(error);
+          this.alertService.error(
+            'Error',
+            'No se pudo eliminar el presupuesto',
+          );
+        }
+      },
+    );
   }
 
   get totalBorradores() {

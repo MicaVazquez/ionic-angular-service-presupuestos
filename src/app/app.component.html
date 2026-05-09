@@ -34,4 +34,16 @@
 
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
+
+  <!-- Alert Modal Global -->
+  <ng-container *ngIf="(alert$ | async) as config">
+    <app-alert-modal
+      [visible]="(visible$ | async) || false"
+      [tipo]="config.tipo"
+      [titulo]="config.titulo"
+      [mensaje]="config.mensaje"
+      [botones]="config.botones"
+      (onClose)="onAlertClose()"
+    ></app-alert-modal>
+  </ng-container>
 </ion-app>
