@@ -5,12 +5,25 @@
 [![Ionic](https://img.shields.io/badge/Ionic-3880FF?style=flat&logo=ionic&logoColor=white)](https://ionicframework.com/)
 [![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white)](https://angular.io/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-119EFF?style=flat&logo=capacitor&logoColor=white)](https://capacitorjs.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
 [![Node](https://img.shields.io/badge/Node-%3E%3D14-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-unlicensed-lightgrey?style=flat)](./LICENSE)
 
 </div>
 
-Aplicación móvil con Ionic + Angular y Capacitor para crear, listar y gestionar presupuestos con ítems, exportar a PDF y compartir.
+Aplicación móvil/web con Ionic + Angular + Capacitor para crear, editar y gestionar presupuestos. Permite agregar múltiples ítems con descripción y precio, calcular totales con anticipos en porcentaje, guardar en Supabase, exportar a PDF y compartir.
+
+## Funcionalidades
+
+- ✅ **Crear y editar presupuestos** con cliente, fecha, ítems, anticipo y observaciones
+- ✅ **Validaciones de formulario** completas con mensajes de error específicos
+- ✅ **Cálculo automático** de subtotal, anticipo y total
+- ✅ **Listado de presupuestos** con búsqueda y filtros por estado
+- ✅ **Detalle de presupuesto** con vista completa
+- ✅ **Eliminar presupuestos** con confirmación
+- ✅ **Exportar a PDF** y compartir
+- ✅ **Modales custom** consistentes (AlertModal) para alertas y confirmaciones
+- ✅ **Persistencia** en Supabase (tabla `presupuesto`)
 
 ## Requisitos
 
@@ -18,11 +31,24 @@ Aplicación móvil con Ionic + Angular y Capacitor para crear, listar y gestiona
 - npm o yarn
 - Ionic CLI — `npm install -g @ionic/cli`
 - Java / Android SDK _(solo para Android)_
+- Cuenta en [Supabase](https://supabase.com/) con tabla `presupuesto` configurada
 
 ## Instalación
 
 ```bash
 npm install
+```
+
+Configurá las credenciales de Supabase en `src/environments/environment.ts`:
+
+```ts
+export const environment = {
+  production: false,
+  supabase: {
+    url: "TU_SUPABASE_URL",
+    key: "TU_SUPABASE_ANON_KEY",
+  },
+};
 ```
 
 ## Desarrollo
@@ -45,25 +71,73 @@ npx cap open android
 npm test
 ```
 
+## Lint
+
+```bash
+npm run lint
+```
+
 ## Estructura
 
 ```
 src/
 ├── app/
-│   ├── mis-presupuestos/
-│   └── ...
+│   ├── components/
+│   │   └── alert-modal.component.ts   # Modal custom (success/error/warning/info)
+│   ├── inicio/                        # Página de inicio
+│   ├── nuevo-presupuesto/             # Crear/editar presupuesto
+│   ├── mis-presupuestos/              # Listar presupuestos
+│   ├── detalle-presupuesto/           # Ver detalle de un presupuesto
+│   ├── splash/                        # Pantalla de splash
+│   ├── interfaces/
+│   │   └── presupuesto.ts             # Modelo Presupuesto e ItemPresupuesto
+│   ├── services/
+│   │   ├── alert.service.ts           # Manejo centralizado de alertas
+│   │   ├── database-service.ts        # Cliente Supabase (CRUD)
+│   │   └── pdf-service.ts             # Generación de PDF
+│   ├── app.component.ts               # Shell con menú lateral
+│   └── app.routes.ts                  # Rutas con loadComponent (lazy)
+├── environments/                      # Config de Supabase (dev/prod)
 └── assets/
-android/
+android/                               # Proyecto Android (Capacitor)
+```
+
+## Stack técnico
+
+- **Ionic 8** + **Angular 20** (standalone components, sin NgModules)
+- **Capacitor 7** para empaquetado a Android
+- **Supabase** como backend (auth + base de datos)
+- **Reactive Forms** (`FormBuilder`, `FormArray`) para formularios
+- **AlertModal custom** reemplazando SweetAlert2
+
+## Modelo de datos
+
+```ts
+interface Presupuesto {
+  id?: string;
+  cliente: string;
+  fecha: string;
+  anticipoPercent: number;
+  items: ItemPresupuesto[];
+  total: number;
+  estado: "borrador" | "finalizado";
+  observaciones?: string | null;
+}
+
+interface ItemPresupuesto {
+  descripcion: string;
+  precio: number;
+}
 ```
 
 ## Notas
 
-- Agregar plugins: `npm install <plugin>` + `npx cap sync`
+- Tras instalar plugins de Capacitor: `npx cap sync`
 - Cambios nativos: sincronizar con `npx cap sync` y abrir la plataforma correspondiente
 
 ## Contribuir
 
-Abre un issue o pull request. Mantén el estilo del código e incluye pruebas.
+Abrí un issue o pull request. Mantené el estilo del código e incluí pruebas.
 
 ## Licencia
 

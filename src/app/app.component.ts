@@ -34,6 +34,7 @@ import {
   informationCircle,
   folderOutline,
   folderSharp,
+  trashOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -93,6 +94,7 @@ export class AppComponent {
       closeCircle,
       warning,
       informationCircle,
+      trashOutline,
     });
   }
 
