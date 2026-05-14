@@ -22,8 +22,10 @@ Aplicación móvil/web con Ionic + Angular + Capacitor para crear, editar y gest
 - ✅ **Detalle de presupuesto** con vista completa
 - ✅ **Eliminar presupuestos** con confirmación
 - ✅ **Exportar a PDF** y compartir
+- ✅ **Login con Supabase Auth** (email + contraseña, sesión persistente)
+- ✅ **Rutas protegidas** con AuthGuard (redirige a `/login` si no está autenticado)
 - ✅ **Modales custom** consistentes (AlertModal) para alertas y confirmaciones
-- ✅ **Persistencia** en Supabase (tabla `presupuesto`)
+- ✅ **Persistencia** en Supabase (tabla `presupuesto` con RLS activo)
 
 ## Requisitos
 
@@ -39,17 +41,25 @@ Aplicación móvil/web con Ionic + Angular + Capacitor para crear, editar y gest
 npm install
 ```
 
-Configurá las credenciales de Supabase en `src/environments/environment.ts`:
+Copiá el archivo de ejemplo y completá con tus credenciales de Supabase:
+
+```bash
+cp src/environments/environment.example.ts src/environments/environment.ts
+```
+
+Editá `src/environments/environment.ts` con tus datos (Settings → API Keys → Publishable key):
 
 ```ts
 export const environment = {
   production: false,
   supabase: {
-    url: "TU_SUPABASE_URL",
-    key: "TU_SUPABASE_ANON_KEY",
+    url: 'TU_SUPABASE_URL',
+    key: 'TU_SUPABASE_PUBLISHABLE_KEY',
   },
 };
 ```
+
+> ⚠️ `environment.ts` está en `.gitignore` — nunca lo subas al repo.
 
 ## Desarrollo
 
@@ -84,6 +94,9 @@ src/
 ├── app/
 │   ├── components/
 │   │   └── alert-modal.component.ts   # Modal custom (success/error/warning/info)
+│   ├── guards/
+│   │   └── auth.guard.ts              # Protege rutas, redirige a /login si no autenticado
+│   ├── login/                         # Página de login (email + contraseña)
 │   ├── inicio/                        # Página de inicio
 │   ├── nuevo-presupuesto/             # Crear/editar presupuesto
 │   ├── mis-presupuestos/              # Listar presupuestos
@@ -93,11 +106,15 @@ src/
 │   │   └── presupuesto.ts             # Modelo Presupuesto e ItemPresupuesto
 │   ├── services/
 │   │   ├── alert.service.ts           # Manejo centralizado de alertas
+│   │   ├── auth.service.ts            # Login/logout con Supabase Auth
 │   │   ├── database-service.ts        # Cliente Supabase (CRUD)
 │   │   └── pdf-service.ts             # Generación de PDF
-│   ├── app.component.ts               # Shell con menú lateral
-│   └── app.routes.ts                  # Rutas con loadComponent (lazy)
-├── environments/                      # Config de Supabase (dev/prod)
+│   ├── app.component.ts               # Shell con menú lateral y botón logout
+│   └── app.routes.ts                  # Rutas con loadComponent (lazy) + canActivate
+├── environments/
+│   ├── environment.example.ts         # ✅ Plantilla con placeholders (subir al repo)
+│   ├── environment.ts                 # ❌ Credenciales reales (en .gitignore)
+│   └── environment.prod.ts            # ❌ Credenciales producción (en .gitignore)
 └── assets/
 android/                               # Proyecto Android (Capacitor)
 ```
@@ -106,7 +123,8 @@ android/                               # Proyecto Android (Capacitor)
 
 - **Ionic 8** + **Angular 20** (standalone components, sin NgModules)
 - **Capacitor 7** para empaquetado a Android
-- **Supabase** como backend (auth + base de datos)
+- **Supabase** como backend (auth + base de datos, RLS activo)
+- **Supabase Auth** para login con email y contraseña
 - **Reactive Forms** (`FormBuilder`, `FormArray`) para formularios
 - **AlertModal custom** reemplazando SweetAlert2
 
