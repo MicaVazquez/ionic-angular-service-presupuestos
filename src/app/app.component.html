@@ -23,12 +23,20 @@
                   [ios]="p.icon + '-outline'"
                   [md]="p.icon + '-sharp'"
                 ></ion-icon>
-
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
           }
         </ion-list>
+
+        <div class="menu-footer">
+          <ion-menu-toggle auto-hide="false">
+            <button class="btn-logout" (click)="cerrarSesion()">
+              <ion-icon name="log-out-outline"></ion-icon>
+              Cerrar sesión
+            </button>
+          </ion-menu-toggle>
+        </div>
       </ion-content>
     </ion-menu>
 

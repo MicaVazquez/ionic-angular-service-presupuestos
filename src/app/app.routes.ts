@@ -1,6 +1,12 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./login/login.page').then((m) => m.LoginPage),
+  },
   {
     path: '',
     redirectTo: 'mis-presupuestos',
@@ -12,6 +18,7 @@ export const routes: Routes = [
       import('./nuevo-presupuesto/nuevo-presupuesto.page').then(
         (m) => m.NuevoPresupuestoPage,
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'nuevo-presupuesto/:id',
@@ -19,6 +26,7 @@ export const routes: Routes = [
       import('./nuevo-presupuesto/nuevo-presupuesto.page').then(
         (m) => m.NuevoPresupuestoPage,
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'home',
@@ -31,6 +39,7 @@ export const routes: Routes = [
       import('./mis-presupuestos/mis-presupuestos.page').then(
         (m) => m.MisPresupuestosPage,
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'splash',
@@ -39,6 +48,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'mis-presupuestos',
+    redirectTo: 'login',
   },
 ];

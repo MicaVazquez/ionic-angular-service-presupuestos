@@ -14,8 +14,10 @@ import {
   IonRouterLink,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AlertModalComponent } from './components/alert-modal.component';
 import { AlertService } from './services/alert.service';
+import { AuthService } from './services/auth.service';
 import { addIcons } from 'ionicons';
 import {
   addCircle,
@@ -35,6 +37,9 @@ import {
   folderOutline,
   folderSharp,
   trashOutline,
+  logOutOutline,
+  eyeOutline,
+  eyeOffOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -76,7 +81,11 @@ export class AppComponent {
   alert$ = this.alertService.alert$;
   visible$ = this.alertService.visible$;
 
-  constructor(private alertService: AlertService) {
+  constructor(
+    private alertService: AlertService,
+    private authService: AuthService,
+    private router: Router,
+  ) {
     addIcons({
       addCircle,
       addCircleOutline,
@@ -95,7 +104,15 @@ export class AppComponent {
       warning,
       informationCircle,
       trashOutline,
+      logOutOutline,
+      eyeOutline,
+      eyeOffOutline,
     });
+  }
+
+  async cerrarSesion() {
+    await this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   onAlertClose() {
