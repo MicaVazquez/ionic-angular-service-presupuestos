@@ -120,7 +120,7 @@ export class AppComponent {
     this.cerrandoSesion = true;
     try {
       await this.authService.logout();
-      this.router.navigate(['/splash']);
+      this.router.navigate(['/login']);
     } finally {
       this.cerrandoSesion = false;
     }

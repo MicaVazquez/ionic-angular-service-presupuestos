@@ -1,13 +1,11 @@
 <ion-content class="login-content">
   <div class="login-container">
-
     <div class="login-header">
       <h1 class="login-title">CPV</h1>
       <p class="login-subtitle">Presupuestos</p>
     </div>
 
     <form [formGroup]="loginForm" class="login-form" (ngSubmit)="login()">
-
       <div class="form-field">
         <label class="field-label">Email</label>
         <input
@@ -19,10 +17,16 @@
           autocomplete="email"
         />
         <ng-container *ngIf="campoInvalido('email')">
-          <p class="error-message" *ngIf="loginForm.get('email')?.errors?.['required']">
+          <p
+            class="error-message"
+            *ngIf="loginForm.get('email')?.errors?.['required']"
+          >
             El email es obligatorio
           </p>
-          <p class="error-message" *ngIf="loginForm.get('email')?.errors?.['email']">
+          <p
+            class="error-message"
+            *ngIf="loginForm.get('email')?.errors?.['email']"
+          >
             Ingres&aacute; un email v&aacute;lido
           </p>
         </ng-container>
@@ -44,31 +48,30 @@
             class="toggle-password"
             (click)="mostrarPassword = !mostrarPassword"
           >
-            <ion-icon [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            <ion-icon
+              [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"
+            ></ion-icon>
           </button>
         </div>
-        <p class="error-message" *ngIf="campoInvalido('password') && loginForm.get('password')?.errors?.['required']">
+        <p
+          class="error-message"
+          *ngIf="campoInvalido('password') && loginForm.get('password')?.errors?.['required']"
+        >
           La contrase&ntilde;a es obligatoria
         </p>
       </div>
 
-      <button
-        type="submit"
-        class="btn-login"
-        [disabled]="cargando"
-      >
+      <button type="submit" class="btn-login" [disabled]="cargando">
         <span *ngIf="!cargando">Ingresar</span>
         <span *ngIf="cargando">Ingresando...</span>
         <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
       </button>
 
       <div class="form-divider"></div>
-      <button type="button" class="forgot-password">
-        &iquest;Olvidaste tu contrase&ntilde;a?
-      </button>
-
     </form>
 
-    <p class="login-footer">Gesti&oacute;n profesional de carpinter&iacute;a &middot; v2.4.0</p>
+    <p class="login-footer">
+      Gesti&oacute;n profesional de carpinter&iacute;a &middot; v2.4.0
+    </p>
   </div>
 </ion-content>
