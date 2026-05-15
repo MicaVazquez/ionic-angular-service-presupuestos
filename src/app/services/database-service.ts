@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { Presupuesto } from '../interfaces/presupuesto';
 
@@ -98,5 +98,20 @@ export class DatabaseService {
       console.error('Error al eliminar el presupuesto:', error);
       throw error;
     }
+  }
+
+  suscribirCambios(callback: () => void): RealtimeChannel {
+    return this.supabase
+      .channel('presupuestos-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: this.tabla },
+        () => callback(),
+      )
+      .subscribe();
+  }
+
+  desuscribir(canal: RealtimeChannel): void {
+    this.supabase.removeChannel(canal);
   }
 }

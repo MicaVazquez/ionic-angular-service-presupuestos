@@ -423,3 +423,24 @@ ion-title {
     min-height: 42px;
   }
 }
+
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  gap: 16px;
+
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    color: #442a22;
+  }
+}
+
+.spinner-texto {
+  color: #827a77;
+  font-size: 0.9rem;
+  margin: 0;
+}

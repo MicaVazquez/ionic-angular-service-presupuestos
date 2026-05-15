@@ -26,7 +26,13 @@
     </div>
   </div>
 
-  <div class="lista-presupuestos">
+  <!-- Spinner de carga -->
+  <div class="spinner-wrapper" *ngIf="cargando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="spinner-texto">Cargando presupuestos...</p>
+  </div>
+
+  <div class="lista-presupuestos" *ngIf="!cargando">
     <div
       class="card-presupuesto"
       *ngFor="let presupuesto of presupuestosFiltrados"
@@ -78,6 +84,7 @@
       <p>No se encontraron presupuestos.</p>
     </div>
   </div>
+
 
   <button
     class="btn-flotante"

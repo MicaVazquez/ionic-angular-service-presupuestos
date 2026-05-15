@@ -43,6 +43,14 @@
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 
+  <!-- Overlay cierre de sesión -->
+  <div class="logout-overlay" *ngIf="cerrandoSesion">
+    <div class="logout-card">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cerrando sesión...</p>
+    </div>
+  </div>
+
   <!-- Alert Modal Global -->
   <ng-container *ngIf="(alert$ | async) as config">
     <app-alert-modal

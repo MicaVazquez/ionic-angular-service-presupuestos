@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,11 +9,14 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
+  IonSpinner,
 } from '@ionic/angular/standalone';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { DatabaseService } from '../services/database-service';
 import { PdfService } from '../services/pdf-service';
 import { Presupuesto } from '../interfaces/presupuesto';
 import { AlertService } from '../services/alert.service';
+
 @Component({
   selector: 'app-mis-presupuestos',
   templateUrl: './mis-presupuestos.page.html',
@@ -26,14 +29,18 @@ import { AlertService } from '../services/alert.service';
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonSpinner,
     CommonModule,
     FormsModule,
   ],
 })
-export class MisPresupuestosPage implements OnInit {
+export class MisPresupuestosPage implements OnInit, OnDestroy {
   presupuestos: Presupuesto[] = [];
   presupuestosFiltrados: Presupuesto[] = [];
   busqueda: string = '';
+  cargando = true;
+
+  private canalRealtime: RealtimeChannel | null = null;
 
   constructor(
     private dataSrv: DatabaseService,
@@ -43,10 +50,31 @@ export class MisPresupuestosPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.dataSrv.obtenerTodos().then((data) => {
-      this.presupuestos = data || [];
-      this.presupuestosFiltrados = [...this.presupuestos];
+    this.cargarDatos();
+    this.canalRealtime = this.dataSrv.suscribirCambios(() => {
+      this.cargarDatos();
     });
+  }
+
+  ionViewWillEnter() {
+    this.cargarDatos();
+  }
+
+  ngOnDestroy() {
+    if (this.canalRealtime) {
+      this.dataSrv.desuscribir(this.canalRealtime);
+    }
+  }
+
+  private async cargarDatos() {
+    this.cargando = true;
+    try {
+      const data = await this.dataSrv.obtenerTodos();
+      this.presupuestos = data || [];
+      this.filtrarPresupuestos();
+    } finally {
+      this.cargando = false;
+    }
   }
 
   filtrarPresupuestos() {
