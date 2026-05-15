@@ -134,10 +134,6 @@ export class MisPresupuestosPage implements OnInit, OnDestroy {
     this.pdfSrv.generarPDF(presupuesto);
   }
 
-  compartirWhatsApp(presupuesto: Presupuesto) {
-    console.log('Compartir WhatsApp', presupuesto);
-  }
-
   eliminarPresupuesto(presupuesto: Presupuesto) {
     if (!presupuesto.id) return;
 

@@ -7,7 +7,6 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonMenuButton,
   IonButton,
   IonIcon,
   IonCard,
@@ -20,8 +19,6 @@ import { DatabaseService } from '../services/database-service';
 import { PdfService } from '../services/pdf-service';
 import { AlertService } from '../services/alert.service';
 import {
-  share,
-  shareOutline,
   documentOutline,
   arrowBack,
 } from 'ionicons/icons';
@@ -60,7 +57,7 @@ export class DetallePresupuestoComponent implements OnInit {
     private pdfSrv: PdfService,
     private alertService: AlertService,
   ) {
-    addIcons({ share, shareOutline, documentOutline, arrowBack });
+    addIcons({ documentOutline, arrowBack });
   }
 
   ngOnInit() {
@@ -79,7 +76,6 @@ export class DetallePresupuestoComponent implements OnInit {
       .then((data) => {
         this.presupuesto = data;
         if (this.presupuesto) {
-          // Calcular montos
           this.montoAnticipo =
             this.presupuesto.anticipoMonto ||
             (this.presupuesto.total * this.presupuesto.anticipoPercent) / 100;
@@ -102,36 +98,6 @@ export class DetallePresupuestoComponent implements OnInit {
     if (this.presupuesto) {
       this.pdfSrv.generarPDF(this.presupuesto);
     }
-  }
-
-  compartirWhatsApp() {
-    if (!this.presupuesto) return;
-
-    const texto = this.generarMensajeWhatsApp();
-    const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-    window.open(urlWhatsApp, '_blank');
-  }
-
-  private generarMensajeWhatsApp(): string {
-    if (!this.presupuesto) return '';
-
-    let mensaje = `*PRESUPUESTO* - ${this.presupuesto.cliente}\n\n`;
-    mensaje += `📅 Fecha: ${this.formatearFecha(this.presupuesto.fecha)}\n\n`;
-    mensaje += `*Detalles:*\n`;
-
-    this.presupuesto.items.forEach((item) => {
-      mensaje += `• ${item.descripcion} - $${item.precio.toLocaleString('es-AR')}\n`;
-    });
-
-    mensaje += `\n*Total: $${this.presupuesto.total.toLocaleString('es-AR')}*\n`;
-    mensaje += `*Anticipo (${this.presupuesto.anticipoPercent}%): $${this.montoAnticipo.toLocaleString('es-AR')}*\n`;
-    mensaje += `*Saldo: $${this.montoSaldo.toLocaleString('es-AR')}*\n`;
-
-    if (this.presupuesto.observaciones) {
-      mensaje += `\n📝 Observaciones: ${this.presupuesto.observaciones}`;
-    }
-
-    return mensaje;
   }
 
   formatearFecha(fecha?: string | number | Date): string {
