@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'mis-presupuestos',
+    redirectTo: 'splash',
     pathMatch: 'full',
   },
   {
@@ -48,6 +48,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'login',
+    redirectTo: 'splash',
   },
 ];

@@ -2,9 +2,6 @@
   <div class="login-container">
 
     <div class="login-header">
-      <div class="logo">
-        <ion-icon name="document-text"></ion-icon>
-      </div>
       <h1 class="login-title">CPV</h1>
       <p class="login-subtitle">Presupuestos</p>
     </div>
@@ -26,20 +23,20 @@
             El email es obligatorio
           </p>
           <p class="error-message" *ngIf="loginForm.get('email')?.errors?.['email']">
-            Ingresá un email válido
+            Ingres&aacute; un email v&aacute;lido
           </p>
         </ng-container>
       </div>
 
       <div class="form-field">
-        <label class="field-label">Contraseña</label>
+        <label class="field-label">Contrase&ntilde;a</label>
         <div class="password-wrapper">
           <input
             class="form-input password-input"
             [class.input-error]="campoInvalido('password')"
             formControlName="password"
             [type]="mostrarPassword ? 'text' : 'password'"
-            placeholder="••••••••"
+            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
             autocomplete="current-password"
           />
           <button
@@ -51,7 +48,7 @@
           </button>
         </div>
         <p class="error-message" *ngIf="campoInvalido('password') && loginForm.get('password')?.errors?.['required']">
-          La contraseña es obligatoria
+          La contrase&ntilde;a es obligatoria
         </p>
       </div>
 
@@ -62,8 +59,16 @@
       >
         <span *ngIf="!cargando">Ingresar</span>
         <span *ngIf="cargando">Ingresando...</span>
+        <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+      </button>
+
+      <div class="form-divider"></div>
+      <button type="button" class="forgot-password">
+        &iquest;Olvidaste tu contrase&ntilde;a?
       </button>
 
     </form>
+
+    <p class="login-footer">Gesti&oacute;n profesional de carpinter&iacute;a &middot; v2.4.0</p>
   </div>
 </ion-content>

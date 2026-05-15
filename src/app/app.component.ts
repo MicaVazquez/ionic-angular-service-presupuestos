@@ -12,6 +12,7 @@ import {
   IonLabel,
   IonRouterOutlet,
   IonRouterLink,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -40,6 +41,7 @@ import {
   logOutOutline,
   eyeOutline,
   eyeOffOutline,
+  arrowForwardOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -61,6 +63,7 @@ import {
     IonLabel,
     IonRouterLink,
     IonRouterOutlet,
+    IonSpinner,
     AlertModalComponent,
   ],
 })
@@ -107,12 +110,20 @@ export class AppComponent {
       logOutOutline,
       eyeOutline,
       eyeOffOutline,
+      arrowForwardOutline,
     });
   }
 
+  cerrandoSesion = false;
+
   async cerrarSesion() {
-    await this.authService.logout();
-    this.router.navigate(['/login']);
+    this.cerrandoSesion = true;
+    try {
+      await this.authService.logout();
+      this.router.navigate(['/splash']);
+    } finally {
+      this.cerrandoSesion = false;
+    }
   }
 
   onAlertClose() {
