@@ -1,149 +1,134 @@
-/* Color Palette */
-$primary: #442a22;
-$secondary: #546067;
-$background: #f9f9f9;
-$surface: #ffffff;
-$surface-container: #eeeeee;
-$surface-container-high: #e8e8e8;
-$outline-variant: #d4c3be;
-$on-surface: #1a1c1c;
-$on-surface-variant: #504441;
+$primary:             #58372d;
+$primary-dark:        #321f1c;
+$background:          #f7f7f7;
+$surface:             #ffffff;
+$line:                #9da5ad;
+$on-surface:          #25201e;
+$on-surface-variant:  #68605d;
+$muted:               #bbb1ad;
+$error:               #c60000;
 
-/* Global Styles */
+/* ─── Base ──────────────────────────────────────── */
 ion-content {
-  --background: #{$background} !important;
-  font-family: "Public Sans", sans-serif;
+  --background: #{$background};
+  font-family: 'Public Sans', sans-serif;
 }
 
-.page-content {
-  padding-bottom: 32px;
-}
-
-/* Header Toolbar */
+/* ─── Header ─────────────────────────────────────── */
 .header-toolbar {
   --background: #{$surface};
-  --border-bottom: 1px solid rgba($outline-variant, 0.2);
   --color: #{$primary};
-  --padding-start: 24px;
-  --padding-end: 24px;
 
   ion-title {
-    font-weight: 700;
-    font-family: "Work Sans", sans-serif;
-    font-size: 1.25rem;
+    font-weight: 900;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.2rem;
     color: $primary;
   }
 }
 
-/* Container & Layout */
+/* ─── Page Layout ─────────────────────────────────── */
 .page-container {
-  max-width: 1200px;
+  width: min(100%, 760px);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px 100px;
 }
 
-/* Hero Section */
 .hero-section {
-  margin-bottom: 48px;
-  margin-top: 24px;
+  padding: 24px 0 32px;
 }
 
 .breadcrumb {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: $on-surface-variant;
-  margin: 0 0 8px 0;
+  color: $muted;
+  margin: 0 0 6px;
 }
 
 .page-title {
-  font-size: 3rem;
-  font-weight: 800;
-  letter-spacing: -1px;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
   color: $primary;
   margin: 0;
-  line-height: 1;
-  font-family: "Work Sans", sans-serif;
+  line-height: 1.1;
 }
 
-/* Form Layout - Two Columns */
+/* ─── Form Layout ─────────────────────────────────── */
 .form-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 32px;
+  grid-template-columns: 1fr 280px;
+  gap: 28px;
   align-items: start;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 860px) {
     grid-template-columns: 1fr;
-    gap: 24px;
   }
 }
 
 .form-column {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 28px;
 }
 
-/* Form Sections */
+/* ─── Sections ────────────────────────────────────── */
 .form-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
 }
 
 .section-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
+  gap: 14px;
+  margin-bottom: 16px;
 
-  &.items-header {
-    justify-content: space-between;
+  .header-content {
+    display: flex;
     align-items: center;
-
-    .header-content {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex: 1;
-    }
+    gap: 14px;
+    flex: 1;
   }
 }
 
 .section-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: $on-surface-variant;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: $muted;
   margin: 0;
-  font-family: "Work Sans", sans-serif;
+  white-space: nowrap;
 }
 
 .divider {
   height: 1px;
-  background: rgba($outline-variant, 0.2);
+  background: #ebebeb;
   flex: 1;
 }
 
-/* Form Card */
+/* ─── Form Card ───────────────────────────────────── */
 .form-card {
   background: $surface;
-  padding: 32px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-left: 4px solid $primary;
+  padding: 24px 22px;
 }
 
-/* Form Grid */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  gap: 24px 28px;
 
-  @media (max-width: 640px) {
+  @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
 }
 
+/* ─── Fields ──────────────────────────────────────── */
 .form-field {
   display: flex;
   flex-direction: column;
@@ -155,123 +140,163 @@ ion-content {
 }
 
 .field-label {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.8px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
   color: $on-surface-variant;
   margin: 0;
 }
 
-/* Form Input Styles */
+/* ─── Inputs ──────────────────────────────────────── */
 .form-input {
-  background: $surface-container-high;
-  border: none;
-  border-bottom: 2px solid $primary;
-  padding: 12px 16px;
-  font-size: 0.95rem;
-  color: $on-surface;
-  font-family: inherit;
-  transition: all 0.2s ease;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-bottom: 1px solid $line;
+  border-radius: 0;
   outline: none;
+  background: $surface;
+  color: $on-surface;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 
   &::placeholder {
-    color: rgba($on-surface-variant, 0.6);
+    color: #c0b8b5;
+    font-weight: 500;
+    opacity: 1;
   }
 
   &:focus {
-    background: $surface;
-    border-bottom-width: 4px;
+    border-color: $primary;
+    box-shadow: 0 1px 0 $primary;
   }
 
   &.textarea {
+    height: auto;
+    padding: 12px;
     resize: none;
-    font-family: inherit;
+    font-family: 'Public Sans', sans-serif;
+    line-height: 1.5;
+  }
+
+  &.input-error {
+    border-color: $error;
+    box-shadow: 0 1px 0 $error;
   }
 }
 
-/* Agregar Button */
-.btn-agregar {
-  background: $secondary;
-  color: #ffffff;
-  border: none;
-  padding: 8px 16px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 4px;
+/* ─── Price input ─────────────────────────────────── */
+.price-input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: background 0.2s;
+}
+
+.price-symbol {
+  position: absolute;
+  left: 12px;
+  color: $on-surface-variant;
+  font-weight: 700;
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.price-input {
+  padding-left: 26px !important;
+}
+
+/* ─── Error messages ──────────────────────────────── */
+.error-message {
+  color: $error;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 4px 0 0;
+  letter-spacing: 0.2px;
+}
+
+/* ─── Items section ───────────────────────────────── */
+.btn-agregar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: $primary;
+  color: #ffffff;
+  border: 0;
+  border-radius: 0;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
 
   &:hover {
-    background: darken($secondary, 5%);
+    background: $primary-dark;
   }
 
   ion-icon {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
-/* Items List */
 .items-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Item Card */
+/* ─── Item Card ───────────────────────────────────── */
 .item-card {
   background: $surface;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-left: 4px solid $primary;
   display: flex;
 }
 
 .item-accent {
-  width: 4px;
-  background: $primary;
-  flex-shrink: 0;
+  display: none; // reemplazado por border-left en item-card
 }
 
 .item-content {
   flex: 1;
-  padding: 32px;
+  padding: 20px 20px 22px;
 }
 
 .item-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .item-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: $primary;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: $muted;
   margin: 0;
-  font-family: "Work Sans", sans-serif;
 }
 
-/* Delete Button */
 .btn-delete {
   background: none;
   border: none;
-  color: $outline-variant;
+  color: #ff767d;
   cursor: pointer;
   padding: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: color 0.2s;
+  transition: color 0.15s;
 
   &:hover {
-    color: #ba1a1a;
+    color: $error;
   }
 
   ion-icon {
@@ -279,179 +304,158 @@ ion-content {
   }
 }
 
-/* Item Form */
 .item-form {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 24px;
 
-  @media (max-width: 640px) {
+  @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
 }
 
-/* Price Input Wrapper */
-.price-input-wrapper {
-  position: relative;
-}
-
-.price-symbol {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: $on-surface-variant;
-  font-weight: 700;
-}
-
-.price-input {
-  padding-left: 32px !important;
-}
-
-/* Summary Column (Sticky) */
+/* ─── Summary Column ──────────────────────────────── */
 .summary-column {
   position: sticky;
-  top: 100px;
+  top: 88px;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 860px) {
     position: static;
   }
 }
 
-/* Summary Card */
 .summary-card {
-  background: $surface-container-high;
-  padding: 32px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: $surface;
+  border-left: 4px solid $primary;
+  padding: 22px 20px;
 }
 
 .summary-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: $on-surface-variant;
-  margin: 0 0 32px 0;
-  font-family: "Work Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: $muted;
+  margin: 0 0 22px;
 }
 
-/* Summary Items */
 .summary-items {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 14px;
+  margin-bottom: 16px;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.95rem;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .summary-label {
+  font-size: 12px;
+  font-weight: 700;
   color: $on-surface-variant;
-  font-weight: 500;
 }
 
 .summary-value {
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 900;
   color: $on-surface;
+  white-space: nowrap;
 }
 
-/* Summary Divider */
 .summary-divider {
   height: 1px;
-  background: rgba($outline-variant, 0.3);
+  background: #ebebeb;
   margin: 16px 0;
 }
 
-/* Summary Total */
 .summary-total {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .total-label {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.8px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: $on-surface-variant;
+  color: $muted;
 }
 
 .total-value {
-  font-size: 2rem;
-  font-weight: 800;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
   color: $primary;
-  font-family: "Work Sans", sans-serif;
+  line-height: 1;
 }
 
-/* Button Group */
+/* ─── Buttons ─────────────────────────────────────── */
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .btn-guardar,
 .btn-cancelar {
   width: 100%;
-  padding: 16px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 0;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-
-.btn-guardar {
-  background: linear-gradient(135deg, $primary 0%, darken($primary, 10%) 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba($primary, 0.2);
-
-  &:hover {
-    opacity: 0.9;
-  }
+  transition: filter 0.15s, transform 0.12s;
 
   &:active {
-    transform: scale(0.98);
+    transform: translateY(1px);
+    filter: brightness(0.94);
   }
 
   ion-icon {
-    font-size: 18px;
+    font-size: 17px;
+  }
+}
+
+.btn-guardar {
+  background: $primary;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(91, 55, 44, 0.22);
+
+  &:hover {
+    background: $primary-dark;
   }
 }
 
 .btn-cancelar {
   background: transparent;
-  border: 2px solid rgba($outline-variant, 0.3);
+  border: 2px solid #eadfdb;
   color: $on-surface-variant;
 
   &:hover {
-    background: $surface-container;
-  }
-
-  ion-icon {
-    font-size: 18px;
+    background: #f2efee;
   }
 }
 
-/* Success Modal */
+/* ─── Success Modal ───────────────────────────────── */
 .modal-exito-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(68, 42, 34, 0.26);
+  background: rgba(50, 31, 28, 0.4);
   display: grid;
   place-items: center;
   padding: 24px;
@@ -459,43 +463,41 @@ ion-content {
 
 .modal-exito {
   width: min(100%, 332px);
-  background: #ffffff;
-  padding: 30px 29px 29px;
+  background: $surface;
+  border-left: 4px solid $primary;
+  padding: 30px 28px;
   text-align: center;
-  box-shadow: 0 18px 40px rgba(68, 42, 34, 0.16);
+  box-shadow: 0 18px 40px rgba(50, 31, 28, 0.16);
 }
 
 .modal-exito-icono {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 25px;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
   background: #f1eeee;
   color: $primary;
   display: grid;
   place-items: center;
-  border-radius: 10px;
 
   ion-icon {
-    font-size: 33px;
+    font-size: 30px;
   }
 }
 
 .modal-exito h2 {
-  margin: 0 0 12px;
-  color: #2e2d2e;
-  font-family: "Work Sans", sans-serif;
-  font-size: 27px;
-  line-height: 1;
+  margin: 0 0 10px;
+  color: $on-surface;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 26px;
   font-weight: 900;
 }
 
 .modal-exito p {
-  width: min(100%, 240px);
-  margin: 0 auto 31px;
-  color: #776d69;
-  font-size: 14px;
-  line-height: 1.5;
+  margin: 0 auto 28px;
+  color: $on-surface-variant;
+  font-size: 13px;
   font-weight: 700;
+  line-height: 1.5;
 }
 
 .modal-exito-btn {
@@ -505,14 +507,13 @@ ion-content {
   border-radius: 0;
   background: $primary;
   color: #ffffff;
-  font-family: inherit;
-  font-size: 13px;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 12px;
   font-weight: 900;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    transform 0.12s ease,
-    filter 0.12s ease;
+  transition: filter 0.15s, transform 0.12s;
 
   &:active {
     transform: translateY(1px);
@@ -520,59 +521,22 @@ ion-content {
   }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ─── Responsive ──────────────────────────────────── */
+@media (max-width: 640px) {
   .page-container {
-    padding: 0 16px;
+    padding: 0 14px 80px;
   }
 
   .page-title {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 
-  .form-card {
-    padding: 20px;
-  }
-
+  .form-card,
   .item-content {
-    padding: 20px;
+    padding: 18px 16px;
   }
 
   .summary-card {
-    padding: 20px;
+    padding: 18px 16px;
   }
-
-  .form-grid,
-  .item-form {
-    gap: 16px;
-  }
-}
-
-@media (max-width: 360px) {
-  .modal-exito {
-    padding: 28px 24px 24px;
-  }
-
-  .modal-exito h2 {
-    font-size: 25px;
-  }
-}
-
-/* Form Validation */
-.form-input.input-error {
-  border-color: #d32f2f;
-  background-color: #fff5f5;
-}
-
-.form-input.input-error:focus {
-  outline-color: #d32f2f;
-  border-color: #d32f2f;
-}
-
-.error-message {
-  color: #d32f2f;
-  font-size: 0.8125rem;
-  margin: 4px 0 0;
-  font-family: "Public Sans", sans-serif;
-  line-height: 1.3;
 }

@@ -74,21 +74,6 @@
                 </ng-container>
               </div>
               <div class="form-field">
-                <label class="field-label">Fecha</label>
-                <input
-                  class="form-input"
-                  [class.input-error]="campoInvalido('fecha')"
-                  formControlName="fecha"
-                  type="date"
-                />
-                <p
-                  class="error-message"
-                  *ngIf="campoInvalido('fecha') && presupuestoForm.get('fecha')?.errors?.['required']"
-                >
-                  La fecha es obligatoria
-                </p>
-              </div>
-              <div class="form-field">
                 <label class="field-label">Anticipo %</label>
                 <input
                   class="form-input"

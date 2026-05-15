@@ -65,6 +65,7 @@ export class NuevoPresupuestoPage implements OnInit {
   presupuestoId: string | null = null;
   modalExitoVisible = false;
   mensajeExito = '';
+  private fechaOriginal: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -105,7 +106,6 @@ export class NuevoPresupuestoPage implements OnInit {
           sinNumeros,
         ],
       ],
-      fecha: [new Date().toISOString().slice(0, 10), Validators.required],
       anticipo: [
         0,
         [Validators.required, Validators.min(0), Validators.max(100)],
@@ -124,9 +124,9 @@ export class NuevoPresupuestoPage implements OnInit {
       .then((presupuesto) => {
         if (presupuesto) {
           // Cargar datos en el formulario
+          this.fechaOriginal = presupuesto.fecha;
           this.presupuestoForm.patchValue({
             cliente: presupuesto.cliente,
-            fecha: presupuesto.fecha,
             anticipo: presupuesto.anticipoPercent,
             observaciones: presupuesto.observaciones || '',
           });
@@ -248,7 +248,9 @@ export class NuevoPresupuestoPage implements OnInit {
       typeof observacionesRaw === 'string' ? observacionesRaw.trim() : '';
     const presupuesto: Presupuesto = {
       cliente: this.presupuestoForm.get('cliente')?.value,
-      fecha: this.presupuestoForm.get('fecha')?.value,
+      fecha: this.modoEdicion
+        ? this.fechaOriginal
+        : new Date().toISOString().slice(0, 10),
       anticipoPercent: this.presupuestoForm.get('anticipo')?.value || 0,
       items: this.items.value,
       total: this.total,
@@ -315,10 +317,10 @@ export class NuevoPresupuestoPage implements OnInit {
   private resetearFormulario() {
     this.presupuestoForm.reset({
       cliente: '',
-      fecha: new Date().toISOString().slice(0, 10),
       anticipo: 0,
       observaciones: '',
     });
+    this.fechaOriginal = '';
     // Limpiar items y agregar uno vacío
     this.items.clear();
     this.agregarItem();
