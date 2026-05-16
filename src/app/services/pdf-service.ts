@@ -10,28 +10,32 @@ type Rgb = [number, number, number];
 @Injectable({ providedIn: 'root' })
 export class PdfService {
   // Paleta
-  private readonly MARRON:        Rgb = [91,  55,  44];
-  private readonly MARRON_OSCURO: Rgb = [42,  25,  21];
-  private readonly BLANCO:        Rgb = [255, 255, 255];
-  private readonly GRIS_FONDO:    Rgb = [245, 244, 243];
-  private readonly GRIS_LINEA:    Rgb = [225, 220, 217];
-  private readonly TEXTO_SUAVE:   Rgb = [130, 120, 116];
-  private readonly TEXTO_CUERPO:  Rgb = [50,  40,  36];
+  private readonly MARRON: Rgb = [91, 55, 44];
+  private readonly MARRON_OSCURO: Rgb = [42, 25, 21];
+  private readonly BLANCO: Rgb = [255, 255, 255];
+  private readonly GRIS_FONDO: Rgb = [245, 244, 243];
+  private readonly GRIS_LINEA: Rgb = [225, 220, 217];
+  private readonly TEXTO_SUAVE: Rgb = [130, 120, 116];
+  private readonly TEXTO_CUERPO: Rgb = [50, 40, 36];
 
   // Márgenes
-  private readonly ML  = 20;   // left
-  private readonly MR  = 190;  // right edge
-  private readonly CW  = 170;  // content width
+  private readonly ML = 20; // left
+  private readonly MR = 190; // right edge
+  private readonly CW = 170; // content width
 
   async generarPDF(p: Presupuesto) {
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const PH  = doc.internal.pageSize.getHeight(); // 297
-    const PW  = doc.internal.pageSize.getWidth();  // 210
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
+    const PH = doc.internal.pageSize.getHeight(); // 297
+    const PW = doc.internal.pageSize.getWidth(); // 210
 
-    const logo      = await this.cargarLogo();
-    const subtotal  = this.obtenerTotal(p);
-    const anticipo  = (subtotal * (p.anticipoPercent || 0)) / 100;
-    const saldo     = subtotal - anticipo;
+    const logo = await this.cargarLogo();
+    const subtotal = this.obtenerTotal(p);
+    const anticipo = (subtotal * (p.anticipoPercent || 0)) / 100;
+    const saldo = subtotal - anticipo;
 
     /* ── 1. Fondo ── */
     this.dibujarFondo(doc, PW, PH);
@@ -140,12 +144,12 @@ export class PdfService {
      CAJAS CLIENTE (GRIS) + FECHA (MARRÓN)
   ───────────────────────────────────────────────── */
   private dibujarCajas(doc: jsPDF, p: Presupuesto, PW: number) {
-    const y0   = 38;
-    const h    = 52;
+    const y0 = 38;
+    const h = 52;
     const gapX = 5;
-    const wL   = 108;   // ancho caja izquierda
-    const xR   = this.ML + wL + gapX;
-    const wR   = this.MR - xR;  // ancho caja derecha
+    const wL = 108; // ancho caja izquierda
+    const xR = this.ML + wL + gapX;
+    const wR = this.MR - xR; // ancho caja derecha
 
     /* — Caja cliente (gris) — */
     doc.setFillColor(...this.GRIS_FONDO);
@@ -215,7 +219,9 @@ export class PdfService {
     doc.setFontSize(5.8);
     doc.setCharSpace(0);
     doc.setTextColor(...this.TEXTO_SUAVE);
-    doc.text('UNIDADES EN PESOS ARGENTINOS (ARS)', this.MR, y, { align: 'right' });
+    doc.text('UNIDADES EN PESOS ARGENTINOS (ARS)', this.MR, y, {
+      align: 'right',
+    });
 
     doc.setDrawColor(...this.GRIS_LINEA);
     doc.setLineWidth(0.2);
@@ -261,7 +267,9 @@ export class PdfService {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(...this.TEXTO_CUERPO);
-      doc.text(lineas.slice(1, 5), this.ML + 3, y + 14, { lineHeightFactor: 1.5 });
+      doc.text(lineas.slice(1, 5), this.ML + 3, y + 14, {
+        lineHeightFactor: 1.5,
+      });
     }
 
     // Precio
@@ -285,15 +293,15 @@ export class PdfService {
     hoy: Date,
   ) {
     // Alturas de cada fila (fijas, desde el fondo hacia arriba)
-    const hPie     = 12;  // pie de página
-    const hSaldo   = 20;  // barra SALDO PENDIENTE
+    const hPie = 12; // pie de página
+    const hSaldo = 20; // barra SALDO PENDIENTE
     const hAnticipo = 22; // fila anticipo + nota
     const hSubtotal = 14; // fila subtotal
 
-    const yPie   = PH - hPie;
-    const yBar   = yPie - hSaldo;
-    const yAnti  = yBar - hAnticipo;
-    const ySub   = yAnti - hSubtotal;
+    const yPie = PH - hPie;
+    const yBar = yPie - hSaldo;
+    const yAnti = yBar - hAnticipo;
+    const ySub = yAnti - hSubtotal;
 
     // ── Separador superior ──
     doc.setDrawColor(...this.GRIS_LINEA);
@@ -314,7 +322,9 @@ export class PdfService {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(...this.TEXTO_CUERPO);
-    doc.text(this.formatMoneda(subtotal), this.MR - 3, ySub + 9.5, { align: 'right' });
+    doc.text(this.formatMoneda(subtotal), this.MR - 3, ySub + 9.5, {
+      align: 'right',
+    });
 
     // ── ANTICIPO (fondo blanco) ──
     doc.setFont('helvetica', 'bold');
@@ -327,7 +337,9 @@ export class PdfService {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(...this.MARRON);
-    doc.text(this.formatMoneda(anticipo), this.MR - 3, yAnti + 8, { align: 'right' });
+    doc.text(this.formatMoneda(anticipo), this.MR - 3, yAnti + 8, {
+      align: 'right',
+    });
 
     // Nota anticipo (observaciones o texto por defecto)
     const nota = p.observaciones?.trim() || 'Requerido para inicio de obra';
@@ -352,14 +364,21 @@ export class PdfService {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
     doc.setTextColor(...this.BLANCO);
-    doc.text(this.formatMoneda(saldo), this.MR - 3, yBar + 12, { align: 'right' });
+    doc.text(this.formatMoneda(saldo), this.MR - 3, yBar + 12, {
+      align: 'right',
+    });
 
     // Sub-nota dentro de la barra: precio vigente a la fecha
     const [dd, mm, yyyy] = this.fechaPartes(hoy);
     doc.setFont('helvetica', 'italic');
-    doc.setFontSize(6);
+    doc.setFontSize(8);
     doc.setTextColor(180, 160, 150);
-    doc.text(`Precios válidos al ${dd}/${mm}/${yyyy}. Sujetos a variación.`, this.MR - 3, yBar + 18, { align: 'right' });
+    doc.text(
+      `Precios válidos al ${dd}/${mm}/${yyyy}. Sujetos a variación.`,
+      this.MR - 3,
+      yBar + 18,
+      { align: 'right' },
+    );
 
     // ── Pie de página ──
     doc.setDrawColor(...this.GRIS_LINEA);
@@ -387,11 +406,11 @@ export class PdfService {
 
   private async cargarLogo(): Promise<string | null> {
     try {
-      const res  = await fetch('assets/logo.png');
+      const res = await fetch('assets/logo.png');
       const blob = await res.blob();
       return await new Promise<string | null>((resolve) => {
         const reader = new FileReader();
-        reader.onload  = () => resolve(reader.result as string);
+        reader.onload = () => resolve(reader.result as string);
         reader.onerror = () => resolve(null);
         reader.readAsDataURL(blob);
       });
@@ -404,7 +423,9 @@ export class PdfService {
     return `$${Math.round(v || 0).toLocaleString('es-AR')}`;
   }
 
-  private fechaPartes(fecha?: string | number | Date): [string, string, string] {
+  private fechaPartes(
+    fecha?: string | number | Date,
+  ): [string, string, string] {
     if (!fecha) return ['--', '--', '----'];
     let d: Date;
     if (fecha instanceof Date) {
@@ -415,8 +436,8 @@ export class PdfService {
       d = /[TZ+]/.test(fecha) ? new Date(fecha) : new Date(fecha + 'T12:00:00');
     }
     if (isNaN(d.getTime())) return ['--', '--', '----'];
-    const dd  = String(d.getDate()).padStart(2, '0');
-    const mm  = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
     const yyyy = String(d.getFullYear());
     return [dd, mm, yyyy];
   }
