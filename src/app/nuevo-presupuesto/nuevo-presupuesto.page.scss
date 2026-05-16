@@ -57,6 +57,31 @@ ion-content {
 }
 
 /* ─── Form Layout ─────────────────────────────────── */
+.spinner-wrapper {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: $primary;
+
+  ion-spinner {
+    width: 42px;
+    height: 42px;
+    --color: #{$primary};
+  }
+}
+
+.spinner-texto {
+  margin: 0;
+  color: $on-surface-variant;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 .form-layout {
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -223,8 +248,12 @@ ion-content {
 .btn-agregar {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 6px 14px;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 16px;
+  padding: 10px 14px;
   background: $primary;
   color: #ffffff;
   border: 0;

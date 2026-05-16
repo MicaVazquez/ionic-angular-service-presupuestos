@@ -10,6 +10,7 @@ import {
   IonIcon,
   IonButtons,
   IonMenuButton,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { Presupuesto } from '../interfaces/presupuesto';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -52,6 +53,7 @@ import { AlertService } from '../services/alert.service';
     CommonModule,
     FormsModule,
     IonIcon,
+    IonSpinner,
     ReactiveFormsModule,
     IonMenuButton,
   ],
@@ -63,6 +65,7 @@ export class NuevoPresupuestoPage implements OnInit {
   total = 0;
   modoEdicion = false;
   presupuestoId: string | null = null;
+  cargandoPresupuesto = false;
   modalExitoVisible = false;
   mensajeExito = '';
   private fechaOriginal: string = '';
@@ -83,9 +86,14 @@ export class NuevoPresupuestoPage implements OnInit {
       if (id) {
         this.modoEdicion = true;
         this.presupuestoId = id;
+        this.cargandoPresupuesto = true;
         // Limpiar el item vacío que se agregó en inicializarFormulario
         this.items.clear();
         this.cargarPresupuesto(id);
+      } else {
+        this.modoEdicion = false;
+        this.presupuestoId = null;
+        this.cargandoPresupuesto = false;
       }
     });
 
@@ -145,15 +153,18 @@ export class NuevoPresupuestoPage implements OnInit {
                     noSoloEspacios,
                   ],
                 ],
-                precio: [
-                  item.precio,
-                  [Validators.required, Validators.min(0.01)],
-                ],
+                precio: [item.precio, [Validators.required]],
               }),
             );
           });
 
           this.calcularTotal();
+        } else {
+          this.alertService.error(
+            'No encontrado',
+            'No se encontro el presupuesto solicitado',
+            () => this.router.navigate(['/mis-presupuestos']),
+          );
         }
       })
       .catch((error) => {
@@ -163,6 +174,9 @@ export class NuevoPresupuestoPage implements OnInit {
           'No se pudo cargar el presupuesto',
           () => this.router.navigate(['/mis-presupuestos']),
         );
+      })
+      .finally(() => {
+        this.cargandoPresupuesto = false;
       });
   }
 
@@ -183,7 +197,7 @@ export class NuevoPresupuestoPage implements OnInit {
           noSoloEspacios,
         ],
       ],
-      precio: [null, [Validators.required, Validators.min(0.01)]],
+      precio: [null, [Validators.required]],
     });
   }
 
