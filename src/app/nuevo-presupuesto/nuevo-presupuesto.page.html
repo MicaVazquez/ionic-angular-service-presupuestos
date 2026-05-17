@@ -191,11 +191,12 @@
                       <input
                         class="form-input price-input"
                         [class.input-error]="itemCampoInvalido(i, 'precio')"
-                        formControlName="precio"
-                        placeholder="0.00"
-                        type="number"
-                        min="0.01"
-                        step="0.01"
+                        [value]="formatearPrecioInput(item.get('precio')?.value)"
+                        (input)="actualizarPrecioItem(i, $event)"
+                        (blur)="item.get('precio')?.markAsTouched()"
+                        placeholder="0,00"
+                        type="text"
+                        inputmode="decimal"
                       />
                     </div>
                     <ng-container *ngIf="itemCampoInvalido(i, 'precio')">

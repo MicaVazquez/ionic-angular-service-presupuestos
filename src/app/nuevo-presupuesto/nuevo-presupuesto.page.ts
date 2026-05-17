@@ -39,6 +39,7 @@ function sinNumeros(control: AbstractControl): ValidationErrors | null {
 }
 import { DatabaseService } from '../services/database-service';
 import { AlertService } from '../services/alert.service';
+import { calcularSubtotal, calcularAnticipo, calcularSaldo } from '../utils/calculos';
 @Component({
   selector: 'app-nuevo-presupuesto',
   templateUrl: './nuevo-presupuesto.page.html',
@@ -211,19 +212,54 @@ export class NuevoPresupuestoPage implements OnInit {
     this.items.removeAt(index);
   }
 
+  formatearPrecioInput(valor: number | string | null | undefined): string {
+    if (valor === null || valor === undefined || valor === '') return '';
+    return new Intl.NumberFormat('es-AR', {
+      maximumFractionDigits: 2,
+    }).format(Number(valor));
+  }
+
+  actualizarPrecioItem(index: number, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const precio = this.normalizarPrecioInput(input.value);
+    const control = this.items.at(index).get('precio');
+
+    input.value = precio.texto;
+    control?.setValue(precio.valor);
+    control?.markAsDirty();
+  }
+
+  private normalizarPrecioInput(texto: string): {
+    texto: string;
+    valor: number | null;
+  } {
+    const limpio = texto.replace(/[^\d,]/g, '');
+    if (!limpio) return { texto: '', valor: null };
+
+    const partes = limpio.split(',');
+    const enteros = partes[0].replace(/\D/g, '');
+    const decimales = partes.slice(1).join('').replace(/\D/g, '').slice(0, 2);
+    const enterosFormateados = enteros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const tieneComa = limpio.includes(',');
+    const textoFormateado = tieneComa
+      ? `${enterosFormateados || '0'},${decimales}`
+      : enterosFormateados;
+    const valor = Number(`${enteros || '0'}.${decimales || '0'}`);
+
+    return { texto: textoFormateado, valor };
+  }
+
   // Calcular total
   calcularTotal() {
-    this.subtotal = this.items.controls.reduce((acc, item) => {
-      const precio = item.get('precio')?.value || 0;
-      return acc + precio;
-    }, 0);
-
-    // Calcular Anticipo basado en el porcentaje ingresado
+    const itemsValores = this.items.controls.map((c) => ({
+      descripcion: c.get('descripcion')?.value ?? '',
+      precio: c.get('precio')?.value || 0,
+    }));
     const anticipoPercent = this.presupuestoForm.get('anticipo')?.value || 0;
-    this.anticipoAmount = this.subtotal * (anticipoPercent / 100);
 
-    // Total = Subtotal (sin sumar anticipo, solo se muestra como referencia)
-    this.total = this.subtotal;
+    this.subtotal      = calcularSubtotal(itemsValores);
+    this.anticipoAmount = calcularAnticipo(this.subtotal, anticipoPercent);
+    this.total         = calcularSaldo(this.subtotal, this.anticipoAmount);
   }
 
   // Helpers para validación en el template
