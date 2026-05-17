@@ -1,4 +1,4 @@
-# Presupuestos
+# Presupuestos — Carpintería PV
 
 <div align="center">
 
@@ -6,48 +6,60 @@
 [![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white)](https://angular.io/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-119EFF?style=flat&logo=capacitor&logoColor=white)](https://capacitorjs.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
-[![Node](https://img.shields.io/badge/Node-%3E%3D14-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/license-unlicensed-lightgrey?style=flat)](./LICENSE)
 
 </div>
 
-Aplicación móvil/web con Ionic + Angular + Capacitor para crear, editar y gestionar presupuestos. Permite agregar múltiples ítems con descripción y precio, calcular totales con anticipos en porcentaje, guardar en Supabase, exportar a PDF y compartir.
+Aplicación móvil y web para gestionar presupuestos de carpintería. Permite crear presupuestos con múltiples ítems, calcular totales con anticipo, exportar a PDF y compartir directamente desde el celular.
+
+---
+
+## Capturas
+
+<!-- Para agregar imágenes: editá este archivo en GitHub.com y arrastrá las capturas acá -->
+
+| Lista de presupuestos | Nuevo presupuesto | PDF generado |
+|---|---|---|
+| _(captura)_ | _(captura)_ | _(captura)_ |
+
+---
 
 ## Funcionalidades
 
-- ✅ **Crear y editar presupuestos** con cliente, fecha, ítems, anticipo y observaciones
-- ✅ **Validaciones de formulario** completas con mensajes de error específicos
-- ✅ **Cálculo automático** de subtotal, anticipo y total
-- ✅ **Listado de presupuestos** con búsqueda y filtros por estado
-- ✅ **Detalle de presupuesto** con vista completa
-- ✅ **Eliminar presupuestos** con confirmación
-- ✅ **Exportar a PDF** y compartir
-- ✅ **Login con Supabase Auth** (email + contraseña, sesión persistente)
-- ✅ **Rutas protegidas** con AuthGuard (redirige a `/login` si no está autenticado)
-- ✅ **Modales custom** consistentes (AlertModal) para alertas y confirmaciones
-- ✅ **Persistencia** en Supabase (tabla `presupuesto` con RLS activo)
+- ✅ **Login** con email y contraseña (Supabase Auth, sesión persistente)
+- ✅ **Crear y editar presupuestos** con cliente, ítems, anticipo % y observaciones
+- ✅ **Validaciones** completas con mensajes de error específicos por campo
+- ✅ **Cálculo automático** de total, anticipo y saldo pendiente
+- ✅ **Listado** con búsqueda en tiempo real y actualizaciones en vivo (Supabase Realtime)
+- ✅ **Exportar a PDF** con diseño profesional (fecha de emisión del día)
+- ✅ **Compartir PDF** en Android vía share sheet (WhatsApp, Gmail, Drive, etc.)
+- ✅ **Eliminar** con confirmación
+- ✅ **Rutas protegidas** con AuthGuard
+- ✅ **Tests** de cálculos financieros (16 specs, 100% pass)
 
-## Requisitos
-
-- Node `>= 14`
-- npm o yarn
-- Ionic CLI — `npm install -g @ionic/cli`
-- Java / Android SDK _(solo para Android)_
-- Cuenta en [Supabase](https://supabase.com/) con tabla `presupuesto` configurada
+---
 
 ## Instalación
+
+### Requisitos
+
+- Node `>= 14`
+- Ionic CLI — `npm install -g @ionic/cli`
+- Cuenta en [Supabase](https://supabase.com/)
+- Java / Android SDK _(solo para build Android)_
+
+### Pasos
 
 ```bash
 npm install
 ```
 
-Copiá el archivo de ejemplo y completá con tus credenciales de Supabase:
+Copiá el archivo de entorno y completá con tus credenciales:
 
 ```bash
 cp src/environments/environment.example.ts src/environments/environment.ts
 ```
 
-Editá `src/environments/environment.ts` con tus datos (Settings → API Keys → Publishable key):
+Editá `environment.ts` con tus datos (**Settings → API Keys → Publishable key**):
 
 ```ts
 export const environment = {
@@ -61,31 +73,27 @@ export const environment = {
 
 > ⚠️ `environment.ts` está en `.gitignore` — nunca lo subas al repo.
 
-## Desarrollo
+---
+
+## Comandos
 
 ```bash
+# Desarrollo web
 ionic serve
-```
 
-## Android
+# Tests
+npm test
 
-```bash
+# Lint
+npm run lint
+
+# Build + Android
 ionic build
 npx cap sync android
-npx cap open android
+npx cap open android   # abre Android Studio para generar el APK
 ```
 
-## Tests
-
-```bash
-npm test
-```
-
-## Lint
-
-```bash
-npm run lint
-```
+---
 
 ## Estructura
 
@@ -93,40 +101,34 @@ npm run lint
 src/
 ├── app/
 │   ├── components/
-│   │   └── alert-modal.component.ts   # Modal custom (success/error/warning/info)
+│   │   └── alert-modal.component.ts   # Modal custom (success / error / warning)
 │   ├── guards/
-│   │   └── auth.guard.ts              # Protege rutas, redirige a /login si no autenticado
-│   ├── login/                         # Página de login (email + contraseña)
-│   ├── inicio/                        # Página de inicio
-│   ├── nuevo-presupuesto/             # Crear/editar presupuesto
-│   ├── mis-presupuestos/              # Listar presupuestos
-│   ├── detalle-presupuesto/           # Ver detalle de un presupuesto
-│   ├── splash/                        # Pantalla de splash
+│   │   └── auth.guard.ts              # Redirige a /login si no autenticado
 │   ├── interfaces/
-│   │   └── presupuesto.ts             # Modelo Presupuesto e ItemPresupuesto
+│   │   └── presupuesto.ts             # Modelos Presupuesto e ItemPresupuesto
+│   ├── login/                         # Pantalla de login
+│   ├── mis-presupuestos/              # Listado con búsqueda y acciones
+│   ├── nuevo-presupuesto/             # Crear / editar presupuesto
+│   ├── splash/                        # Pantalla de carga inicial
 │   ├── services/
-│   │   ├── alert.service.ts           # Manejo centralizado de alertas
-│   │   ├── auth.service.ts            # Login/logout con Supabase Auth
-│   │   ├── database-service.ts        # Cliente Supabase (CRUD)
-│   │   └── pdf-service.ts             # Generación de PDF
-│   ├── app.component.ts               # Shell con menú lateral y botón logout
-│   └── app.routes.ts                  # Rutas con loadComponent (lazy) + canActivate
+│   │   ├── alert.service.ts           # Alertas centralizadas
+│   │   ├── auth.service.ts            # Login / logout con Supabase Auth
+│   │   ├── database-service.ts        # CRUD + Realtime (Supabase)
+│   │   └── pdf-service.ts             # Generación y descarga / share de PDF
+│   ├── utils/
+│   │   ├── calculos.ts                # Funciones puras: subtotal, anticipo, saldo
+│   │   └── calculos.spec.ts           # 16 tests de cálculos financieros
+│   ├── app.component.ts               # Shell con menú lateral y logout
+│   └── app.routes.ts                  # Rutas lazy + canActivate
 ├── environments/
-│   ├── environment.example.ts         # ✅ Plantilla con placeholders (subir al repo)
-│   ├── environment.ts                 # ❌ Credenciales reales (en .gitignore)
-│   └── environment.prod.ts            # ❌ Credenciales producción (en .gitignore)
+│   ├── environment.example.ts         # ✅ Plantilla (en el repo)
+│   ├── environment.ts                 # ❌ Credenciales reales (.gitignore)
+│   └── environment.prod.ts            # ❌ Credenciales producción (.gitignore)
 └── assets/
-android/                               # Proyecto Android (Capacitor)
+    └── logo.png                       # Logo opcional (si no existe usa "CPV")
 ```
 
-## Stack técnico
-
-- **Ionic 8** + **Angular 20** (standalone components, sin NgModules)
-- **Capacitor 7** para empaquetado a Android
-- **Supabase** como backend (auth + base de datos, RLS activo)
-- **Supabase Auth** para login con email y contraseña
-- **Reactive Forms** (`FormBuilder`, `FormArray`) para formularios
-- **AlertModal custom** reemplazando SweetAlert2
+---
 
 ## Modelo de datos
 
@@ -134,11 +136,11 @@ android/                               # Proyecto Android (Capacitor)
 interface Presupuesto {
   id?: string;
   cliente: string;
-  fecha: string;
+  fecha: string;          // se asigna automáticamente al crear
   anticipoPercent: number;
   items: ItemPresupuesto[];
   total: number;
-  estado: "borrador" | "finalizado";
+  estado: 'borrador' | 'finalizado';
   observaciones?: string | null;
 }
 
@@ -148,15 +150,24 @@ interface ItemPresupuesto {
 }
 ```
 
+---
+
+## Stack
+
+| Capa | Tecnología |
+|---|---|
+| UI | Ionic 8 + Angular 20 (standalone components) |
+| Mobile | Capacitor 7 (Android) |
+| Backend | Supabase (PostgreSQL + Auth + Realtime) |
+| Seguridad | Row Level Security (RLS) con políticas `authenticated` |
+| PDF | jsPDF + @capacitor/share |
+| Forms | ReactiveFormsModule (FormBuilder + FormArray) |
+| Tests | Karma + Jasmine |
+
+---
+
 ## Notas
 
-- Tras instalar plugins de Capacitor: `npx cap sync`
-- Cambios nativos: sincronizar con `npx cap sync` y abrir la plataforma correspondiente
-
-## Contribuir
-
-Abrí un issue o pull request. Mantené el estilo del código e incluí pruebas.
-
-## Licencia
-
-Sin licencia definida — considerar añadir una.
+- Tras instalar un plugin de Capacitor, correr `npx cap sync`
+- El PDF usa la fecha del día que se genera, no la de creación del presupuesto
+- Los precios en el PDF incluyen la leyenda _"Precios válidos al DD/MM/YYYY. Sujetos a variación."_
