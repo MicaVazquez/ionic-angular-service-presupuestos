@@ -17,7 +17,7 @@ Aplicación móvil y web para gestionar presupuestos de carpintería. Permite cr
 
 | Splash | Login | Lista de presupuestos | Nuevo presupuesto | PDF generado |
 |:---:|:---:|:---:|:---:|:---:|
-| <img width="333" alt="Splash" src="https://github.com/user-attachments/assets/eaae9310-acf0-4a9b-9eeb-011d2625b3ec" /> | <img width="341" alt="Login" src="https://github.com/user-attachments/assets/a27d9d62-d42f-4317-91e7-82e4fca86531" /> | <img width="379" alt="Lista de presupuestos" src="https://github.com/user-attachments/assets/85fcb952-6b66-4b5f-8b81-dede067c5057" /> | <img width="380" alt="Nuevo presupuesto" src="https://github.com/user-attachments/assets/ecdc7715-ee28-44d4-9b36-9ad8aee32a6f" /> | <img width="570" alt="PDF generado" src="https://github.com/user-attachments/assets/987c7c1d-f1ca-4610-80ec-dca7689eeee8" /> |
+| <img width="425" height="738" alt="image" src="https://github.com/user-attachments/assets/51bc1847-5925-457d-861b-7ecf146cc6ed" />| <img width="340" alt="Login" src="https://github.com/user-attachments/assets/2689a60c-ff0e-470a-9554-8b548a78387d" /> | <img width="379" alt="Lista de presupuestos" src="https://github.com/user-attachments/assets/85fcb952-6b66-4b5f-8b81-dede067c5057" /> | <img width="380" alt="Nuevo presupuesto" src="https://github.com/user-attachments/assets/ecdc7715-ee28-44d4-9b36-9ad8aee32a6f" /> | <img width="570" alt="PDF generado" src="https://github.com/user-attachments/assets/987c7c1d-f1ca-4610-80ec-dca7689eeee8" /> |
  
 
 ---
