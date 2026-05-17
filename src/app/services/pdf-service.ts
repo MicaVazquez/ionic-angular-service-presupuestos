@@ -4,6 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import { Presupuesto } from '../interfaces/presupuesto';
+import { calcularSubtotal, calcularAnticipo, calcularSaldo } from '../utils/calculos';
 
 type Rgb = [number, number, number];
 
@@ -32,10 +33,10 @@ export class PdfService {
     const PH = doc.internal.pageSize.getHeight(); // 297
     const PW = doc.internal.pageSize.getWidth(); // 210
 
-    const logo = await this.cargarLogo();
-    const subtotal = this.obtenerTotal(p);
-    const anticipo = (subtotal * (p.anticipoPercent || 0)) / 100;
-    const saldo = subtotal - anticipo;
+    const logo     = await this.cargarLogo();
+    const subtotal = calcularSubtotal(p.items || []);
+    const anticipo = calcularAnticipo(subtotal, p.anticipoPercent || 0);
+    const saldo    = calcularSaldo(subtotal, anticipo);
 
     /* ── 1. Fondo ── */
     this.dibujarFondo(doc, PW, PH);
@@ -308,20 +309,25 @@ export class PdfService {
     doc.setLineWidth(0.3);
     doc.line(this.ML, ySub, this.MR, ySub);
 
-    // ── SUBTOTAL (fondo gris) ──
-    doc.setFillColor(245, 244, 243);
+    // ── TOTAL (fondo gris, texto más fuerte) ──
+    doc.setFillColor(235, 230, 227);  // gris más oscuro para destacar
     doc.rect(this.ML, ySub, this.CW, hSubtotal, 'F');
 
+    // Línea de acento marrón arriba de la fila
+    doc.setDrawColor(...this.MARRON);
+    doc.setLineWidth(0.8);
+    doc.line(this.ML, ySub, this.MR, ySub);
+
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
+    doc.setFontSize(8);
     doc.setCharSpace(0.8);
-    doc.setTextColor(...this.TEXTO_SUAVE);
-    doc.text('SUBTOTAL:', this.ML + 5, ySub + 9);
+    doc.setTextColor(...this.MARRON_OSCURO);
+    doc.text('TOTAL:', this.ML + 5, ySub + 9);
     doc.setCharSpace(0);
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(...this.TEXTO_CUERPO);
+    doc.setFontSize(13);
+    doc.setTextColor(...this.MARRON_OSCURO);
     doc.text(this.formatMoneda(subtotal), this.MR - 3, ySub + 9.5, {
       align: 'right',
     });
